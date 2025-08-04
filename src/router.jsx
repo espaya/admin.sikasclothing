@@ -8,6 +8,13 @@ import AddCateogry from "./views/AddCategory.jsx";
 import Category from "./views/Category.jsx";
 import Discount from "./views/Discount.jsx";
 import AddDiscount from "./views/AddDiscount.jsx";
+import Brand from "./views/Brand.jsx";
+import AddBrand from "./views/AddBrand.jsx";
+import OrderList from "./views/OrderList.jsx";
+import OrderDetail from "./views/OrderDetail.jsx";
+import Customers from "./views/Customers.jsx";
+import BannedCustomers from "./views/BannedCustomers.jsx";
+import ProductList from "./views/ProductList.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
@@ -29,6 +36,13 @@ export const ROUTE_CONFIG = {
   ADDPRODUCT: {
     path: "/sc-dashboard/product/add-product",
     element: <AddProduct />,
+    name: "Add Product",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  PRODUCTLIST: {
+    path: "/sc-dashboard/products",
+    element: <ProductList />,
     name: "Add Product",
     isProtected: true,
     roles: ["ADMIN"],
@@ -61,7 +75,48 @@ export const ROUTE_CONFIG = {
     isProtected: true,
     roles: ["ADMIN"],
   },
-
+  BRANDS: {
+    path: "/sc-dashboard/product/brands",
+    element: <Brand />,
+    name: "Brands",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  ADDBRAND: {
+    path: "/sc-dashboard/product/add-brand",
+    element: <AddBrand />,
+    name: "Add Brand",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  ORDERLIST: {
+    path: "/sc-dashboard/orderlist",
+    element: <OrderList />,
+    name: "Order List",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  ORDERDETAIL: {
+    path: "/sc-dashboard/order-detail",
+    element: <OrderDetail />,
+    name: "Order Detail",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  CUSTOMERS: {
+    path: "/sc-dashboard/customers",
+    element: <Customers />,
+    name: "Customers",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  BANNEDCUSTOMERS: {
+    path: "/sc-dashboard/customers/banned",
+    element: <BannedCustomers />,
+    name: "Banned Customers",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
   //   NOT_FOUND: {
   //     path: "*",
   //     element: <NotFound />,
