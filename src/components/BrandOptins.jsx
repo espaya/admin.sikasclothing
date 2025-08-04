@@ -42,10 +42,11 @@ export default function BrandOptions({ formData, handleChange, errors }) {
           >
             <option value="">Select Brand</option>
             {brandOptions.map((brand) => (
-              <option key={brand} value={brand}>
-                {brand}
+              <option key={brand.id} value={brand.id}>
+                {brand.name}
               </option>
             ))}
+            <option value="Other">Other</option>
           </select>
         </div>
 

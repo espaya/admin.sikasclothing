@@ -56,31 +56,10 @@ export default function Category() {
         content="width=device-width, initial-scale=1, maximum-scale=1"
       ></meta>
 
-      <link rel="stylesheet" type="text/css" href="css/animate.min.css"></link>
-      <link rel="stylesheet" type="text/css" href="css/animation.css"></link>
-      <link rel="stylesheet" type="text/css" href="css/bootstrap.css"></link>
-
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="css/bootstrap-select.min.css"
-      ></link>
-      <link rel="stylesheet" type="text/css" href="css/style.css"></link>
-      <link rel="stylesheet" href="font/fonts.css"></link>
-      <link rel="stylesheet" href="icon/style.css"></link>
-      <link rel="shortcut icon" href="images/favicon.png"></link>
-
-      <link rel="apple-touch-icon-precomposed" href="images/favicon.png"></link>
       <div className="body">
         <div id="wrapper">
           <div id="page" className="">
             <div className="layout-wrap">
-              <div id="preload" className="preload-container">
-                <div className="preloading">
-                  <span></span>
-                </div>
-              </div>
-
               <Sidebar></Sidebar>
               <div className="section-content-right">
                 <Header></Header>
@@ -199,9 +178,8 @@ export default function Category() {
                                         {category.name}
                                       </a>
                                     </div>
-                                    <div>{/* icon */}</div>
                                     <div className="body-text">
-                                      {category.is_featured === 1
+                                      {category.is_featured == "1"
                                         ? "Yes"
                                         : "No"}
                                     </div>
@@ -221,9 +199,13 @@ export default function Category() {
                                       <div className="item edit">
                                         <i className="icon-edit-3"></i>
                                       </div>
-                                      <div className="item trash">
-                                        <i className="icon-trash-2"></i>
-                                      </div>
+                                      {category.slug === "general" ? (
+                                        ""
+                                      ) : (
+                                        <div className="item trash">
+                                          <i className="icon-trash-2"></i>
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
                                 </li>

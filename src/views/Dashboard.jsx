@@ -37,32 +37,14 @@ export default function Dashboard() {
       <link rel="apple-touch-icon-precomposed" href="images/favicon.png"></link>
 
       <div className="body">
-        {/* #wrapper */}
+
         <div id="wrapper">
-          {/* #page */}
           <div id="page" className="">
-            {/* layout-wrap */}
-            <div className="layout-wrap">
-              {/* preload */}
-              <div id="preload" className="preload-container">
-                <div className="preloading">
-                  <span></span>
-                </div>
-              </div>
-              {/* /preload */}
-              {/* section-menu-left */}
-
+            <div className="layout-wrap">         
               <Sidebar />
-
-              {/* /section-menu-left */}
-              {/* section-content-right */}
               <div className="section-content-right">
-                {/* header-dashboard */}
-
                 <Header ></Header>
 
-                {/* /header-dashboard */}
-                {/* main-content */}
                 <div className="main-content">
                   {/* main-content-wrap */}
                   <div className="main-content-inner">

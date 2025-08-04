@@ -1,8 +1,13 @@
 import Cookies from "js-cookie";
 import { useState } from "react";
+import GetDiscount from "./GetDiscount";
+import GetCategory from "./GetCategory";
+import BrandOptions from "./BrandOptins";
 
 export default function AddProductForm() {
   const sizeOptions = [
+    // Standard sizes
+    "XXS",
     "XS",
     "S",
     "M",
@@ -11,34 +16,156 @@ export default function AddProductForm() {
     "XXL",
     "3XL",
     "4XL",
+    "5XL",
+    "6XL",
+
+    // Petite sizes
+    "P-XS",
+    "P-S",
+    "P-M",
+    "P-L",
+    "P-XL",
+
+    // Tall sizes
+    "T-XS",
+    "T-S",
+    "T-M",
+    "T-L",
+    "T-XL",
+    "T-XXL",
+
+    // Plus sizes
+    "0X",
+    "1X",
+    "2X",
+    "3X",
+    "4X",
+
+    // Numeric sizes (common for pants/dresses)
+    "28",
+    "30",
+    "32",
+    "34",
+    "36",
+    "38",
+    "40",
+    "42",
+    "44",
+    "46",
+    "48",
+
+    // Alpha-numeric combinations
+    "XS/S",
+    "M/L",
+    "L/XL",
+
+    // Standardized sizing
+    "One Size",
+    "OSFA",
+
+    // Age-based sizing
+    "Newborn",
+    "3-6M",
+    "6-12M",
+    "12-18M",
+    "18-24M",
+    "2T",
+    "3T",
+    "4T",
+    "5T",
+
+    // European sizes
+    "EU 32",
+    "EU 34",
+    "EU 36",
+    "EU 38",
+    "EU 40",
+    "EU 42",
+    "EU 44",
+    "EU 46",
+    "EU 48",
+
+    // UK sizes
+    "UK 4",
+    "UK 6",
+    "UK 8",
+    "UK 10",
+    "UK 12",
+    "UK 14",
+    "UK 16",
+    "UK 18",
+    "UK 20",
+
+    // Asian sizes
+    "Asian S",
+    "Asian M",
+    "Asian L",
+
+    // Custom options
+    "Made-to-Measure",
+    "Bespoke",
     "Custom",
   ];
 
-  const brandOptions = ["Nike", "Adidas", "Puma", "Zara", "H&M", "Other"];
-
-  const categories = [
-    "Shop",
-    "Product",
-    "Services",
-    "Electronics",
-    "Clothing",
-    "Automobiles",
-  ];
-
   const fitTypes = [
-    "Regular",
-    "Slim",
-    "Loose",
-    "Relaxed",
-    "Tailored",
-    "Skinny",
-    "Oversized",
+    // Basic fits
+    "Regular Fit",
+    "Slim Fit",
+    "Loose Fit",
+    "Relaxed Fit",
+    "Tailored Fit",
+    "Skinny Fit",
+    "Oversized Fit",
+
+    // Women-specific fits
+    "Fitted",
+    "Bodycon",
+    "A-Line",
+    "Empire Waist",
+    "Peplum",
+    "Sheath",
+    "Shift",
+
+    // Men-specific fits
+    "Classic Fit",
+    "Modern Fit",
+    "Athletic Fit",
+    "Muscle Fit",
+    "Comfort Fit",
+
+    // Jeans/Pants fits
+    "Straight Leg",
+    "Bootcut",
+    "Flared",
+    "Wide Leg",
+    "Tapered",
+    "Cropped",
+    "Cigarette",
+    "Mom Fit",
+    "Dad Fit",
+
+    // Specialized fits
+    "Asymmetrical",
+    "Draped",
+    "Drop Shoulder",
+    "Boxy",
+    "High Waisted",
+    "Low Waisted",
+    "Mid Rise",
+
+    // Custom/other
+    "Made-to-Measure",
+    "Unisex Fit",
+    "Maternity Fit",
+    "Petite Fit",
+    "Tall Fit",
+    "Plus Size Fit",
+    "custom",
   ];
 
   const [formData, setFormData] = useState({
     product_name: "",
-    category: "",
-
+    category: [],
     tags: [],
     gender: "",
     brand: "",
@@ -49,13 +176,19 @@ export default function AddProductForm() {
     stock_quantity: "",
     stock_status: "",
     status: "",
-    color: "",
+    colors: ["#ffffff"],
     material: "",
-    fit_type: "",
-    size: "",
-    custom_size: "",
+    fit_type: [],
+    custom_fit_type: [],
+    size: [],
+    custom_size: [],
     gallery: [],
     featured: false,
+    discount: "",
+    barcode: "",
+    weight: "",
+    dimensions: "",
+    storage: "",
   });
 
   const [tagInput, setTagInput] = useState("");
@@ -85,7 +218,8 @@ export default function AddProductForm() {
   };
 
   const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
+    const { name, value, type, checked, files, options, multiple } = e.target;
+
     if (type === "checkbox") {
       setFormData((prev) => ({ ...prev, [name]: checked }));
     } else if (name === "gallery") {
@@ -93,6 +227,11 @@ export default function AddProductForm() {
         ...prev,
         gallery: [...prev.gallery, ...Array.from(files)],
       }));
+    } else if (multiple) {
+      const selectedValues = Array.from(options)
+        .filter((opt) => opt.selected)
+        .map((opt) => opt.value);
+      setFormData((prev) => ({ ...prev, [name]: selectedValues }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -104,6 +243,24 @@ export default function AddProductForm() {
       file.type.startsWith("image/")
     );
     setFormData((prev) => ({ ...prev, gallery: [...prev.gallery, ...files] }));
+  };
+
+  // Handle individual color change
+  const handleColorChange = (e, index) => {
+    const newColors = [...formData.colors];
+    newColors[index] = e.target.value;
+    setFormData({ ...formData, colors: newColors });
+  };
+
+  // Add new color picker
+  const addColor = () => {
+    setFormData({ ...formData, colors: [...formData.colors, "#000000"] });
+  };
+
+  // Remove a color
+  const removeColor = (index) => {
+    const newColors = formData.colors.filter((_, i) => i !== index);
+    setFormData({ ...formData, colors: newColors });
   };
 
   const handleDragOver = (e) => e.preventDefault();
@@ -121,14 +278,42 @@ export default function AddProductForm() {
     setErrors({});
 
     try {
-      const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
-      await fetch(`${apiBase}/sanctum/csrf-cookie`, { credentials: "include" });
+      const apiBase = import.meta.env.VITE_API_URL;
+
+      const csrfResponse = await fetch(`${apiBase}/sanctum/csrf-cookie`, {
+        credentials: "include",
+      });
+
       const csrfToken = Cookies.get("XSRF-TOKEN");
 
+      if (!csrfResponse.ok) {
+        throw new Error("Failed to fetch CSRF token");
+      }
+
+      if (!csrfToken) {
+        throw new Error("CSRF token not found");
+      }
+
       const form = new FormData();
-      for (const [key, value] of Object.entries(formData)) {
+
+      // Merge custom_fit_type (if not empty) into fit_type
+      const customFitTypes = formData.custom_fit_type
+        .map((item) => item.trim())
+        .filter((item) => item !== "");
+
+      const mergedFitTypes = Array.from(
+        new Set([...formData.fit_type, ...customFitTypes])
+      );
+
+      // Prepare form data for submission
+      for (const [key, value] of Object.entries({
+        ...formData,
+        fit_type: mergedFitTypes,
+      })) {
         if (key === "gallery") {
           value.forEach((file) => form.append("gallery[]", file));
+        } else if (Array.isArray(value)) {
+          value.forEach((item) => form.append(`${key}[]`, item));
         } else {
           form.append(key, value);
         }
@@ -137,12 +322,14 @@ export default function AddProductForm() {
       const response = await fetch(`${apiBase}/api/add-product`, {
         method: "POST",
         headers: {
-          Accept: "application/json",
           "X-XSRF-TOKEN": decodeURIComponent(csrfToken),
+          Accept: "application/json",
         },
         credentials: "include",
         body: form,
       });
+
+      console.log(response);
 
       const data = await response.json();
 
@@ -152,8 +339,7 @@ export default function AddProductForm() {
       } else {
         setFormData({
           product_name: "",
-          category: "",
-
+          category: [],
           tags: [],
           gender: "",
           brand: "",
@@ -164,19 +350,26 @@ export default function AddProductForm() {
           stock_quantity: "",
           stock_status: "",
           status: "",
-          color: "",
+          colors: ["#ffffff"],
           material: "",
-          fit_type: "",
-          size: "",
-          custom_size: "",
+          fit_type: [],
+          custom_fit_type: [],
+          size: [],
+          custom_size: [],
           gallery: [],
-          featured: false,
+          featured: "",
+          discount: "",
+          barcode: "",
+          weight: "",
+          dimensions: "",
+          storage: "",
         });
         setSuccessMessage(data.message);
         setTimeout(() => setSuccessMessage(""), 3500);
       }
     } catch (err) {
       setErrors({ general: err.message });
+      console.log(err);
       setTimeout(() => setErrors({}), 3500);
     } finally {
       setLoading(false);
@@ -186,7 +379,7 @@ export default function AddProductForm() {
   return (
     <>
       {errors.general && (
-        <p id="error-message" className="text-danger md-5">
+        <p id="error-message" className="alert alert-danger md-5">
           {" "}
           {errors.general}{" "}
         </p>
@@ -194,7 +387,11 @@ export default function AddProductForm() {
       {successMessage && (
         <p className="alert alert-success"> {successMessage} </p>
       )}
-      <form className="tf-section-2 form-add-product" onSubmit={handleSubmit}>
+      <form
+        className="tf-section-2 form-add-product"
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+      >
         <div className="wg-box">
           <fieldset className="name">
             <div className="body-title mb-10">
@@ -208,6 +405,7 @@ export default function AddProductForm() {
               tabIndex="0"
               value={formData.product_name}
               aria-required="true"
+              autoComplete="off"
               onChange={handleChange}
             ></input>
             {errors.product_name && (
@@ -216,36 +414,14 @@ export default function AddProductForm() {
               </div>
             )}
           </fieldset>
-          <div className="gap22 cols">
-            <fieldset className="category">
-              <div className="body-title mb-10">
-                Category <span className="tf-color-1">*</span>
-              </div>
-              <div className="select">
-                <select
-                  name="category"
-                  className=""
-                  value={formData.category}
-                  onChange={handleChange}
-                >
-                  <option value="">Choose category</option>
-                  {categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {errors.category && (
-                <div className="text-tiny text-danger">
-                  {errors.category[0]}
-                </div>
-              )}
-            </fieldset>
-          </div>
+
+          <GetCategory
+            formData={formData}
+            errors={errors}
+            handleChange={handleChange}
+          ></GetCategory>
 
           <div className="gap22 cols">
-            
             <fieldset className="name">
               <div className="body-title mb-10">
                 Tags <span className="tf-color-1">*</span>
@@ -293,51 +469,29 @@ export default function AddProductForm() {
                 Gender <span className="tf-color-1">*</span>
               </div>
               <div className="select">
-                <select name="gender" className="">
-                  <option>Male</option>
-                  <option>Female</option>
-                  <option>Unisex</option>
-                  <option>Other</option>
+                <select
+                  name="gender"
+                  value={formData.gender} // bind it to state
+                  onChange={handleChange} // update state when changed
+                  className=""
+                >
+                  <option value="">Select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Unisex">Unisex</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
               {errors.gender && (
                 <div className="text-tiny text-danger">{errors.gender[0]}</div>
               )}
             </fieldset>
-            <fieldset className="brand">
-              <div className="body-title mb-10">
-                Brand <span className="tf-color-1">*</span>
-              </div>
-              <div className="select">
-                <select
-                  name="brand"
-                  className=""
-                  value={formData.brand}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Brand</option>
-                  {brandOptions.map((brand) => (
-                    <option key={brand} value={brand}>
-                      {brand}
-                    </option>
-                  ))}
-                </select>
-              </div>
 
-              {formData.brand === "Other" && (
-                <input
-                  type="text"
-                  name="custom_brand"
-                  placeholder="Enter custom brand"
-                  value={formData.custom_brand || ""}
-                  onChange={handleChange}
-                  className="mt-2"
-                />
-              )}
-              {errors.brand && (
-                <div className="text-tiny text-danger">{errors.brand[0]}</div>
-              )}
-            </fieldset>
+            <BrandOptions
+              formData={formData}
+              handleChange={handleChange}
+              errors={errors}
+            ></BrandOptions>
           </div>
           <fieldset className="description">
             <div className="body-title mb-10">
@@ -375,6 +529,7 @@ export default function AddProductForm() {
                 value={formData.price}
                 aria-required="true"
                 onChange={handleChange}
+                autoComplete="off"
               ></input>
               {errors.price && (
                 <div className="text-tiny text-danger">{errors.price[0]}</div>
@@ -413,6 +568,7 @@ export default function AddProductForm() {
                 value={formData.stock_quantity}
                 aria-required="true"
                 onChange={handleChange}
+                autoComplete="off"
               ></input>
               {errors.stock_quantity && (
                 <div className="text-tiny text-danger">
@@ -425,43 +581,60 @@ export default function AddProductForm() {
           <div className="gap22 cols">
             <fieldset className="name">
               <div className="body-title mb-10">
-                Stock Status <span className="tf-color-1">*</span>
+                Weight <span className="tf-color-1">(Optional)</span>
               </div>
-              <div className="select mb-10">
-                <select
-                  name="stock_status"
-                  value={formData.stock_status}
-                  onChange={handleChange}
-                >
-                  <option value="">Select stock status</option>
-                  <option value="in_stock">In Stock</option>
-                  <option value="out_of_stock">Out of Stock</option>
-                  <option value="backorder">Backorder</option>
-                </select>
+              <input
+                className="mb-10"
+                type="text"
+                placeholder="1.5kg"
+                name="weight"
+                tabIndex="0"
+                value={formData.weight}
+                aria-required="true"
+                onChange={handleChange}
+                autoComplete="off"
+              ></input>
+              {errors.weight && (
+                <div className="text-tiny text-danger">{errors.weight[0]}</div>
+              )}
+            </fieldset>
+            <fieldset className="name">
+              <div className="body-title mb-10">
+                Dimensions <span className="tf-color-1">(Optional)</span>
               </div>
-              {errors.stock_status && (
+              <input
+                className="mb-10"
+                type="text"
+                placeholder="90 x 60 x 90 cm"
+                name="dimensions"
+                tabIndex="0"
+                value={formData.dimensions}
+                aria-required="true"
+                onChange={handleChange}
+              ></input>
+              {errors.dimensions && (
                 <div className="text-tiny text-danger">
-                  {errors.stock_status[0]}
+                  {errors.dimensions[0]}
                 </div>
               )}
             </fieldset>
             <fieldset className="name">
               <div className="body-title mb-10">
-                Status <span className="tf-color-1">*</span>
+                Storage <span className="tf-color-1">(Optional)</span>
               </div>
-              <div className="select mb-10">
-                <select
-                  name="stock_status"
-                  value={formData.status}
-                  onChange={handleChange}
-                >
-                  <option value="">Select product status</option>
-                  <option value="published">Published</option>
-                  <option value="draft">Draft</option>
-                </select>
-              </div>
-              {errors.status && (
-                <div className="text-tiny text-danger">{errors.status[0]}</div>
+              <input
+                className="mb-10"
+                type="text"
+                placeholder=""
+                name="storage"
+                tabIndex="0"
+                value={formData.storage}
+                aria-required="true"
+                onChange={handleChange}
+                autoComplete="off"
+              ></input>
+              {errors.storage && (
+                <div className="text-tiny text-danger">{errors.storage[0]}</div>
               )}
             </fieldset>
           </div>
@@ -546,10 +719,10 @@ export default function AddProductForm() {
                 <select
                   name="size"
                   className=""
+                  multiple
                   value={formData.size}
                   onChange={handleChange}
                 >
-                  <option value="">Select Size</option>
                   {sizeOptions.map((size) => (
                     <option key={size} value={size}>
                       {size}
@@ -558,36 +731,190 @@ export default function AddProductForm() {
                 </select>
               </div>
 
-              {formData.size === "Custom" && (
-                <input
-                  type="text"
-                  name="custom_size"
-                  className="mt-2"
-                  placeholder="Enter custom size"
-                  value={formData.custom_size || ""}
-                  onChange={handleChange}
-                />
+              {formData.size.includes("Custom") && (
+                <div className="custom-sizes">
+                  <div className="row g-3">
+                    {formData.custom_size.map((cs, i) => (
+                      <div
+                        key={i}
+                        className="col-md-6"
+                        // className="col-xl-3 col-lg-4 col-md-6 col-sm-6" // Adjusted for 4 items per row on xl screens
+                        style={{ position: "relative" }}
+                      >
+                        <input
+                          type="text"
+                          placeholder={`Size ${i + 1}`}
+                          value={cs}
+                          onChange={(e) => {
+                            const updated = [...formData.custom_size];
+                            updated[i] = e.target.value;
+                            setFormData((prev) => ({
+                              ...prev,
+                              custom_size: updated,
+                            }));
+                          }}
+                          className="form-control"
+                          style={{
+                            minWidth: "100%", // Ensure inputs take full width of their container
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = [...formData.custom_size];
+                            updated.splice(i, 1);
+                            setFormData((prev) => ({
+                              ...prev,
+                              custom_size: updated,
+                            }));
+                          }}
+                          className="btn btn-link p-0 position-absolute top-50 end-0 translate-middle-y"
+                          style={{
+                            color: "red",
+                            fontSize: "1rem",
+                            right: "15px",
+                          }}
+                          title="Remove"
+                        >
+                          ❌
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        custom_size: [...prev.custom_size, ""],
+                      }))
+                    }
+                    className="btn btn-primary mt-3"
+                    style={{
+                      padding: "0.5rem 1.25rem",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    + Add Another Custom Size
+                  </button>
+                </div>
               )}
               {errors.size && (
                 <div className="text-tiny text-danger">{errors.size[0]}</div>
               )}
             </fieldset>
+
             <fieldset className="name">
               <div className="body-title mb-10">
-                Color <span className="tf-color-1">*</span>
+                Colors <span className="tf-color-1">*</span>
               </div>
-              <input
-                className="mb-10"
-                type="text"
-                placeholder="Enter product color"
-                name="color"
-                tabIndex="0"
-                value={formData.color}
-                aria-required="true"
-                onChange={handleChange}
-              ></input>
-              {errors.color && (
-                <div className="text-tiny text-danger">{errors.color[0]}</div>
+
+              {formData.colors.map((color, index) => (
+                <div
+                  key={index}
+                  className="d-flex align-items-center gap-3 mb-2"
+                >
+                  <input
+                    type="color"
+                    name={`colors[${index}]`}
+                    value={color}
+                    onChange={(e) => handleColorChange(e, index)}
+                    autoComplete="off"
+                  />
+                  <div
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "6px",
+                      border: "1px solid #ccc",
+                      backgroundColor:
+                        color === "#ffffff" && index === 0
+                          ? "transparent"
+                          : color,
+                      backgroundImage:
+                        color === "#ffffff" && index === 0
+                          ? "linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)"
+                          : "none",
+                      backgroundSize: "10px 10px",
+                      backgroundPosition: "0 0, 5px 5px",
+                    }}
+                  ></div>
+
+                  {/* Allow removing colors except the first */}
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-danger"
+                      onClick={() => removeColor(index)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              <button
+                type="button"
+                className="btn btn-sm btn-primary mt-2"
+                onClick={addColor}
+              >
+                Add Another Color
+              </button>
+
+              {errors.colors && (
+                <div className="text-tiny text-danger">{errors.colors}</div>
+              )}
+            </fieldset>
+          </div>
+
+          <div className="gap22 cols">
+            <fieldset className="name">
+              <div className="body-title mb-10">
+                Stock Status <span className="tf-color-1">*</span>
+              </div>
+              <div className="select mb-10">
+                <select
+                  name="stock_status"
+                  value={formData.stock_status}
+                  onChange={handleChange}
+                >
+                  <option value="">Select stock status</option>
+                  <option value="in_stock">In Stock</option>
+                  <option value="out_of_stock">Out of Stock</option>
+                  <option value="backorder">Backorder</option>
+                </select>
+              </div>
+              {errors.stock_status && (
+                <div className="text-tiny text-danger">
+                  {errors.stock_status[0]}
+                </div>
+              )}
+            </fieldset>
+
+            <GetDiscount
+              formData={formData}
+              handleChange={handleChange}
+              errors={errors}
+            ></GetDiscount>
+
+            <fieldset className="name">
+              <div className="body-title mb-10">
+                Status <span className="tf-color-1">*</span>
+              </div>
+              <div className="select mb-10">
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                >
+                  <option value="">Select product status</option>
+                  <option value="Published">Published</option>
+                  <option value="Draft">Draft</option>
+                </select>
+              </div>
+              {errors.status && (
+                <div className="text-tiny text-danger">{errors.status[0]}</div>
               )}
             </fieldset>
           </div>
@@ -606,6 +933,7 @@ export default function AddProductForm() {
                 value={formData.material}
                 aria-required="true"
                 onChange={handleChange}
+                autoComplete="off"
               ></input>
               {errors.material && (
                 <div className="text-tiny text-danger">
@@ -613,16 +941,17 @@ export default function AddProductForm() {
                 </div>
               )}
             </fieldset>
+
             <fieldset className="name">
               <div className="body-title mb-10">Fit Type</div>
               <div className="select mb-10">
                 <select
                   name="fit_type"
                   className=""
+                  multiple
                   value={formData.fit_type}
                   onChange={handleChange}
                 >
-                  <option value="">Select Fit Type</option>
                   {fitTypes.map((type) => (
                     <option key={type} value={type}>
                       {type}
@@ -630,6 +959,72 @@ export default function AddProductForm() {
                   ))}
                 </select>
               </div>
+
+              {/* Show custom input button and fields only when 'custom' is selected */}
+              {formData.fit_type.includes("custom") && (
+                <div className="custom-fit-types">
+                  <div className="row g-3">
+                    {formData.custom_fit_type.map((cft, i) => (
+                      <div
+                        key={i}
+                        className="col-md-6"
+                        style={{ position: "relative" }}
+                      >
+                        <input
+                          type="text"
+                          placeholder={`Custom Fit Type ${i + 1}`}
+                          value={cft}
+                          onChange={(e) => {
+                            const updated = [...formData.custom_fit_type];
+                            updated[i] = e.target.value;
+                            setFormData((prev) => ({
+                              ...prev,
+                              custom_fit_type: updated,
+                            }));
+                          }}
+                          className="form-control"
+                          style={{ minWidth: "100%" }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = [...formData.custom_fit_type];
+                            updated.splice(i, 1);
+                            setFormData((prev) => ({
+                              ...prev,
+                              custom_fit_type: updated,
+                            }));
+                          }}
+                          className="btn btn-link p-0 position-absolute top-50 end-0 translate-middle-y"
+                          style={{
+                            color: "red",
+                            fontSize: "1rem",
+                            right: "15px",
+                          }}
+                          title="Remove"
+                        >
+                          ❌
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        custom_fit_type: [...prev.custom_fit_type, ""],
+                      }))
+                    }
+                    className="btn btn-primary mt-3"
+                    style={{ padding: "0.5rem 1.25rem", fontSize: "1rem" }}
+                  >
+                    + Add Another Custom Fit Type
+                  </button>
+                </div>
+              )}
+
               {errors.fit_type && (
                 <div className="text-tiny text-danger">
                   {errors.fit_type[0]}
@@ -637,6 +1032,25 @@ export default function AddProductForm() {
               )}
             </fieldset>
           </div>
+
+          <fieldset className="name">
+            <div className="body-title mb-10">
+              Barcode <span className="tf-color-1">(Optional)</span>
+            </div>
+            <input
+              className="mb-10"
+              type="text"
+              placeholder="Enter product barcode"
+              name="barcode"
+              tabIndex="0"
+              value={formData.barcode}
+              aria-required="true"
+              onChange={handleChange}
+            ></input>
+            {errors.barcode && (
+              <div className="text-tiny text-danger">{errors.barcode[0]}</div>
+            )}
+          </fieldset>
 
           <fieldset className="name">
             <div className="body-title mb-10">
@@ -650,6 +1064,7 @@ export default function AddProductForm() {
                   name="featured"
                   checked={formData.featured}
                   onChange={handleChange}
+                  value="1"
                 />
                 <span className="text-tiny">Mark this product as featured</span>
               </label>
@@ -664,12 +1079,6 @@ export default function AddProductForm() {
             >
               {loading ? "Saving Product..." : "Add product"}
             </button>
-            <button className="tf-button style-1 w-full" type="submit">
-              Save product
-            </button>
-            <a href="#" className="tf-button style-2 w-full">
-              Schedule
-            </a>
           </div>
         </div>
       </form>

@@ -15,6 +15,9 @@ import OrderDetail from "./views/OrderDetail.jsx";
 import Customers from "./views/Customers.jsx";
 import BannedCustomers from "./views/BannedCustomers.jsx";
 import ProductList from "./views/ProductList.jsx";
+import Menu from "./views/Menu.jsx";
+import AddMenu from "./views/Addmenu.jsx";
+import Settings from "./views/Settings.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
@@ -114,6 +117,27 @@ export const ROUTE_CONFIG = {
     path: "/sc-dashboard/customers/banned",
     element: <BannedCustomers />,
     name: "Banned Customers",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  MENU: {
+    path: "/sc-dashboard/menu",
+    element: <Menu />,
+    name: "Menu",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  ADDMENU: {
+    path: "/sc-dashboard/menu/add",
+    element: <AddMenu />,
+    name: "Add Menu",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  SETTINGS: {
+    path: "/sc-dashboard/settings",
+    element: <Settings />,
+    name: "Settings",
     isProtected: true,
     roles: ["ADMIN"],
   },

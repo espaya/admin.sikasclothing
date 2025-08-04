@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function GetCategory({formData, errors, handleChange}) {
+export default function GetCategory({ formData, errors, handleChange }) {
   const [categoryOptions, setCategoryOptions] = useState([]);
 
   useEffect(() => {
@@ -37,12 +37,12 @@ export default function GetCategory({formData, errors, handleChange}) {
             <select
               name="category"
               className=""
+              multiple
               value={formData.category}
               onChange={handleChange}
             >
-              <option value="">Choose category</option>
               {categoryOptions.map((category) => (
-                <option key={category.id} value={category.name}>
+                <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
               ))}

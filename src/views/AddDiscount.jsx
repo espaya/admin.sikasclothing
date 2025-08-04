@@ -6,7 +6,6 @@ import Sidebar from "../components/Sidebar";
 export default function AddDiscount() {
   return (
     <>
-
       <meta charSet="utf-8" />
 
       <title>Add Discount - Sika's Clothing</title>
@@ -31,11 +30,6 @@ export default function AddDiscount() {
       <div id="wrapper">
         <div id="page" className="">
           <div className="layout-wrap">
-            <div id="preload" className="preload-container">
-              <div className="preloading">
-                <span />
-              </div>
-            </div>
             <Sidebar></Sidebar>
             <div className="section-content-right">
               <Header></Header>

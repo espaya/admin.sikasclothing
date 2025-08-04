@@ -2,8 +2,7 @@ import { useContext } from "react";
 import { AuthContext } from "../auth/AuthContext";
 
 export default function Header() {
-
-    const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   return (
     <div className="header-dashboard">
@@ -14,168 +13,23 @@ export default function Header() {
               className=""
               id="logo_header_mobile"
               alt=""
-              src="images/logo/logo.png"
-              data-light="images/logo/logo.png"
-              data-dark="images/logo/logo-dark.png"
+              src="/assets/images/logo/logo.png"
+              data-light="/assets/images/logo/logo.png"
+              data-dark="/assets/images/logo/logo-dark.png"
               data-width="154px"
               data-height="52px"
-              data-retina="images/logo/logo@2x.png"
+              data-retina="/assets/images/logo/logo@2x.png"
             ></img>
           </a>
           <div className="button-show-hide">
             <i className="icon-menu-left"></i>
           </div>
-          <form className="form-search flex-grow">
-            <fieldset className="name">
-              <input
-                type="text"
-                placeholder="Search here..."
-                className="show-search"
-                name="name"
-                tabIndex="2"
-                // value=""
-                aria-required="true"
-                required=""
-                onChange={() => null}
-              ></input>
-            </fieldset>
-            <div className="button-submit">
-              <button className="" type="submit">
-                <i className="icon-search"></i>
-              </button>
-            </div>
-            <div className="box-content-search" id="box-content-search">
-              <ul className="mb-24">
-                <li className="mb-14">
-                  <div className="body-title">Top selling product</div>
-                </li>
-                <li className="mb-14">
-                  <div className="divider"></div>
-                </li>
-                <li>
-                  <ul>
-                    <li className="product-item gap14 mb-10">
-                      <div className="image no-bg">
-                        <img src="images/products/17.png" alt=""></img>
-                      </div>
-                      <div className="flex items-center justify-between gap20 flex-grow">
-                        <div className="name">
-                          <a href="product-list.html" className="body-text">
-                            Dog Food Rachael Ray Nutrish®
-                          </a>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="mb-10">
-                      <div className="divider"></div>
-                    </li>
-                    <li className="product-item gap14 mb-10">
-                      <div className="image no-bg">
-                        <img src="images/products/18.png" alt=""></img>
-                      </div>
-                      <div className="flex items-center justify-between gap20 flex-grow">
-                        <div className="name">
-                          <a href="product-list.html" className="body-text">
-                            Natural Dog Food Healthy Dog Food
-                          </a>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="mb-10">
-                      <div className="divider"></div>
-                    </li>
-                    <li className="product-item gap14">
-                      <div className="image no-bg">
-                        <img src="images/products/19.png" alt=""></img>
-                      </div>
-                      <div className="flex items-center justify-between gap20 flex-grow">
-                        <div className="name">
-                          <a href="product-list.html" className="body-text">
-                            Freshpet Healthy Dog Food and Cat
-                          </a>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-              <ul className="">
-                <li className="mb-14">
-                  <div className="body-title">Order product</div>
-                </li>
-                <li className="mb-14">
-                  <div className="divider"></div>
-                </li>
-                <li>
-                  <ul>
-                    <li className="product-item gap14 mb-10">
-                      <div className="image no-bg">
-                        <img src="images/products/20.png" alt=""></img>
-                      </div>
-                      <div className="flex items-center justify-between gap20 flex-grow">
-                        <div className="name">
-                          <a href="product-list.html" className="body-text">
-                            Sojos Crunchy Natural Grain Free...
-                          </a>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="mb-10">
-                      <div className="divider"></div>
-                    </li>
-                    <li className="product-item gap14 mb-10">
-                      <div className="image no-bg">
-                        <img src="images/products/21.png" alt=""></img>
-                      </div>
-                      <div className="flex items-center justify-between gap20 flex-grow">
-                        <div className="name">
-                          <a href="product-list.html" className="body-text">
-                            Kristin Watson
-                          </a>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="mb-10">
-                      <div className="divider"></div>
-                    </li>
-                    <li className="product-item gap14 mb-10">
-                      <div className="image no-bg">
-                        <img src="images/products/22.png" alt=""></img>
-                      </div>
-                      <div className="flex items-center justify-between gap20 flex-grow">
-                        <div className="name">
-                          <a href="product-list.html" className="body-text">
-                            Mega Pumpkin Bone
-                          </a>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="mb-10">
-                      <div className="divider"></div>
-                    </li>
-                    <li className="product-item gap14">
-                      <div className="image no-bg">
-                        <img src="images/products/23.png" alt=""></img>
-                      </div>
-                      <div className="flex items-center justify-between gap20 flex-grow">
-                        <div className="name">
-                          <a href="product-list.html" className="body-text">
-                            Mega Pumpkin Bone
-                          </a>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </form>
         </div>
         <div className="header-grid">
           <div className="header-item country">
             <select className="image-select no-text">
-              <option data-thumbnail="images/country/1.png">ENG</option>
-              <option data-thumbnail="images/country/9.png">VIE</option>
+              <option data-thumbnail="/assets/images/country/1.png">ENG</option>
+              <option data-thumbnail="/assets/images/country/9.png">VIE</option>
             </select>
           </div>
           <div className="header-item button-dark-light">
@@ -205,7 +59,7 @@ export default function Header() {
                 <li>
                   <div className="noti-item w-full wg-user active">
                     <div className="image">
-                      <img src="images/avatar/user-11.png" alt=""></img>
+                      <img src="/assets/images/avatar/user-11.png" alt=""></img>
                     </div>
                     <div className="flex-grow">
                       <div className="flex items-center justify-between">
@@ -221,7 +75,7 @@ export default function Header() {
                 <li>
                   <div className="noti-item w-full wg-user active">
                     <div className="image">
-                      <img src="images/avatar/user-12.png" alt=""></img>
+                      <img src="/assets/images/avatar/user-12.png" alt=""></img>
                     </div>
                     <div className="flex-grow">
                       <div className="flex items-center justify-between">
@@ -239,7 +93,7 @@ export default function Header() {
                 <li>
                   <div className="noti-item w-full wg-user active">
                     <div className="image">
-                      <img src="images/avatar/user-13.png" alt=""></img>
+                      <img src="/assets/images/avatar/user-13.png" alt=""></img>
                     </div>
                     <div className="flex-grow">
                       <div className="flex items-center justify-between">
@@ -255,7 +109,7 @@ export default function Header() {
                 <li>
                   <div className="noti-item w-full wg-user active">
                     <div className="image">
-                      <img src="images/avatar/user-11.png" alt=""></img>
+                      <img src="/assets/images/avatar/user-11.png" alt=""></img>
                     </div>
                     <div className="flex-grow">
                       <div className="flex items-center justify-between">
@@ -393,7 +247,7 @@ export default function Header() {
                   <ul className="list-apps">
                     <li className="item">
                       <div className="image">
-                        <img src="images/apps/item-1.png" alt=""></img>
+                        <img src="/assets/images/apps/item-1.png" alt=""></img>
                       </div>
                       <a href="#">
                         <div className="text-tiny">Photoshop</div>
@@ -401,7 +255,7 @@ export default function Header() {
                     </li>
                     <li className="item">
                       <div className="image">
-                        <img src="images/apps/item-2.png" alt=""></img>
+                        <img src="/assets/images/apps/item-2.png" alt=""></img>
                       </div>
                       <a href="#">
                         <div className="text-tiny">illustrator</div>
@@ -409,7 +263,7 @@ export default function Header() {
                     </li>
                     <li className="item">
                       <div className="image">
-                        <img src="images/apps/item-3.png" alt=""></img>
+                        <img src="/assets/images/apps/item-3.png" alt=""></img>
                       </div>
                       <a href="#">
                         <div className="text-tiny">Sheets</div>
@@ -417,7 +271,7 @@ export default function Header() {
                     </li>
                     <li className="item">
                       <div className="image">
-                        <img src="images/apps/item-4.png" alt=""></img>
+                        <img src="/assets/images/apps/item-4.png" alt=""></img>
                       </div>
                       <a href="#">
                         <div className="text-tiny">Gmail</div>
@@ -425,7 +279,7 @@ export default function Header() {
                     </li>
                     <li className="item">
                       <div className="image">
-                        <img src="images/apps/item-5.png" alt=""></img>
+                        <img src="/assets/images/apps/item-5.png" alt=""></img>
                       </div>
                       <a href="#">
                         <div className="text-tiny">Messenger</div>
@@ -433,7 +287,7 @@ export default function Header() {
                     </li>
                     <li className="item">
                       <div className="image">
-                        <img src="images/apps/item-6.png" alt=""></img>
+                        <img src="/assets/images/apps/item-6.png" alt=""></img>
                       </div>
                       <a href="#">
                         <div className="text-tiny">Youtube</div>
@@ -441,7 +295,7 @@ export default function Header() {
                     </li>
                     <li className="item">
                       <div className="image">
-                        <img src="images/apps/item-7.png" alt=""></img>
+                        <img src="/assets/images/apps/item-7.png" alt=""></img>
                       </div>
                       <a href="#">
                         <div className="text-tiny">Flaticon</div>
@@ -449,7 +303,7 @@ export default function Header() {
                     </li>
                     <li className="item">
                       <div className="image">
-                        <img src="images/apps/item-8.png" alt=""></img>
+                        <img src="/assets/images/apps/item-8.png" alt=""></img>
                       </div>
                       <a href="#">
                         <div className="text-tiny">Instagram</div>
@@ -457,7 +311,7 @@ export default function Header() {
                     </li>
                     <li className="item">
                       <div className="image">
-                        <img src="images/apps/item-9.png" alt=""></img>
+                        <img src="/assets/images/apps/item-9.png" alt=""></img>
                       </div>
                       <a href="#">
                         <div className="text-tiny">PDF</div>
@@ -484,11 +338,11 @@ export default function Header() {
               >
                 <span className="header-user wg-user">
                   <span className="image">
-                    <img src="images/avatar/user-1.png" alt=""></img>
+                    <img src="/assets/images/avatar/user-1.png" alt=""></img>
                   </span>
                   <span className="flex flex-column">
-                    <span className="body-title mb-2"> { user.name } </span>
-                    <span className="text-tiny"> { user.role } </span>
+                    <span className="body-title mb-2"> {user.name} </span>
+                    <span className="text-tiny"> {user.role} </span>
                   </span>
                 </span>
               </button>
@@ -522,7 +376,7 @@ export default function Header() {
                   </a>
                 </li>
                 <li>
-                  <a href="setting.html" className="user-item">
+                  <a href="/sc-dashboard/settings" className="user-item">
                     <div className="icon">
                       <i className="icon-settings"></i>
                     </div>

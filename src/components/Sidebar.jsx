@@ -7,20 +7,25 @@ export default function Sidebar() {
     setOpenDropdown((prev) => (prev === menuName ? null : menuName));
   };
 
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <div className="section-menu-left">
+    <div className={`section-menu-left ${collapsed ? "collapsed" : ""}`}>
       <div className="box-logo">
         <a href="index.html" id="site-logo-inner">
           <img
             className=""
             id="logo_header"
             alt=""
-            src="images/logo/logo.png"
-            data-light="images/logo/logo.png"
-            data-dark="images/logo/logo-dark.png"
+            src="/assets/images/logo/logo.png"
+            data-light="/assets/images/logo/logo.png"
+            data-dark="/assets/images/logo/logo-dark.png"
           ></img>
         </a>
-        <div className="button-show-hide">
+        <div
+          className="button-show-hide"
+          onClick={() => setCollapsed((prev) => !prev)}
+        >
           <i className="icon-menu-left"></i>
         </div>
       </div>
@@ -65,23 +70,8 @@ export default function Sidebar() {
                     </a>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="product-list.html" className="">
+                    <a href="/sc-dashboard/products" className="">
                       <div className="text">Product List</div>
-                    </a>
-                  </li>
-                  <li className="sub-menu-item">
-                    <a href="product-detail-1.html" className="">
-                      <div className="text">Product Detail 1</div>
-                    </a>
-                  </li>
-                  <li className="sub-menu-item">
-                    <a href="product-detail-2.html" className="">
-                      <div className="text">Product Detail 2</div>
-                    </a>
-                  </li>
-                  <li className="sub-menu-item">
-                    <a href="product-detail-3.html" className="">
-                      <div className="text">Product Detail 3</div>
                     </a>
                   </li>
                 </ul>
@@ -145,77 +135,124 @@ export default function Sidebar() {
                   </li>
                 </ul>
               </li>
+
               <li className="menu-item has-children">
-                <a href="#" className="menu-item-button">
+                <a
+                  href="#"
+                  className="menu-item-button"
+                  onClick={() => toggleDropdown("brands")}
+                >
                   <div className="icon">
-                    <i className="icon-box"></i>
+                    <i className="icon-briefcase"></i>
                   </div>
-                  <div className="text">Attributes</div>
+                  <div className="text">Brands</div>
                 </a>
-                <ul className="sub-menu">
+                <ul
+                  className="sub-menu"
+                  style={{
+                    display: openDropdown === "brands" ? "block" : "none",
+                  }}
+                >
                   <li className="sub-menu-item">
-                    <a href="attributes.html" className="">
-                      <div className="text">Attributes</div>
+                    <a href="/sc-dashboard/product/brands" className="">
+                      <div className="text">Brands</div>
                     </a>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="add-attributes.html" className="">
-                      <div className="text">Add attributes</div>
+                    <a href="/sc-dashboard/product/add-brand" className="">
+                      <div className="text">Add Brand</div>
                     </a>
                   </li>
                 </ul>
               </li>
+
               <li className="menu-item has-children">
-                <a href="#" className="menu-item-button">
+                <a
+                  href="#"
+                  className="menu-item-button"
+                  onClick={() => toggleDropdown("order")}
+                >
                   <div className="icon">
                     <i className="icon-file-plus"></i>
                   </div>
                   <div className="text">Order</div>
                 </a>
-                <ul className="sub-menu">
+                <ul
+                  className="sub-menu"
+                  style={{
+                    display: openDropdown === "order" ? "block" : "none",
+                  }}
+                >
                   <li className="sub-menu-item">
-                    <a href="oder-list.html" className="">
-                      <div className="text">Order list</div>
+                    <a href="/sc-dashboard/orderlist" className="">
+                      <div className="text">Order List</div>
                     </a>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="oder-detail.html" className="">
-                      <div className="text">Order detail</div>
+                    <a href="" className="">
+                      <div className="text">Order Tracking</div>
                     </a>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="oder-tracking.html" className="">
-                      <div className="text">Order tracking</div>
+                    <a href="/sc-dashboard/order-detail" className="">
+                      <div className="text">Details</div>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li className="menu-item has-children">
+                <a
+                  href="#"
+                  className="menu-item-button"
+                  onClick={() => toggleDropdown("customer")}
+                >
+                  <div className="icon">
+                    <i className="icon-user"></i>
+                  </div>
+                  <div className="text">Customers</div>
+                </a>
+                <ul
+                  className="sub-menu"
+                  style={{
+                    display: openDropdown === "customer" ? "block" : "none",
+                  }}
+                >
+                  <li className="sub-menu-item">
+                    <a href="/sc-dashboard/customers" className="">
+                      <div className="text">All Customers</div>
+                    </a>
+                  </li>
+                  <li className="sub-menu-item">
+                    <a href="/sc-dashboard/customers/banned" className="">
+                      <div className="text">Banned Customers</div>
                     </a>
                   </li>
                 </ul>
               </li>
               <li className="menu-item has-children">
-                <a href="#" className="menu-item-button">
+                <a
+                  href="#"
+                  className="menu-item-button"
+                  onClick={() => toggleDropdown("menu")}
+                >
                   <div className="icon">
-                    <i className="icon-user"></i>
+                    <i className="icon-menu"></i>
                   </div>
-                  <div className="text">User</div>
+                  <div className="text">Menu</div>
                 </a>
-                <ul className="sub-menu">
+                <ul
+                  className="sub-menu"
+                  style={{ display: openDropdown === "menu" ? "block" : "" }}
+                >
                   <li className="sub-menu-item">
-                    <a href="all-user.html" className="">
-                      <div className="text">All user</div>
+                    <a href="/sc-dashboard/menu" className="">
+                      <div className="text">All Menus</div>
                     </a>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="add-new-user.html" className="">
-                      <div className="text">Add new user</div>
-                    </a>
-                  </li>
-                  <li className="sub-menu-item">
-                    <a href="login.html" className="">
-                      <div className="text">Login</div>
-                    </a>
-                  </li>
-                  <li className="sub-menu-item">
-                    <a href="sign-up.html" className="">
-                      <div className="text">Sign up</div>
+                    <a href="/sc-dashboard/menu/add" className="">
+                      <div className="text">Create menu</div>
                     </a>
                   </li>
                 </ul>

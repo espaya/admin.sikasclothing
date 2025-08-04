@@ -32,11 +32,6 @@ export default function AddProduct() {
         <div id="wrapper">
           <div id="page" className="">
             <div className="layout-wrap">
-              <div id="preload" className="preload-container">
-                <div className="preloading">
-                  <span></span>
-                </div>
-              </div>
               <Sidebar></Sidebar>
               <div className="section-content-right">
                 <Header></Header>

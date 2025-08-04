@@ -1,19 +1,75 @@
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import { useEffect, useState } from "react";
+import Cookie from "js-cookie";
 
 export default function Discount() {
+  const [discounts, setDiscounts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [perPage, setPerPage] = useState(10);
+  const [meta, setMeta] = useState({});
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+  const fetchDiscounts = async (page = 1, perPage = 10, search = "") => {
+    setLoading(true);
+    try {
+      const csrfToken = Cookie.get("XSRF-TOKEN");
+
+      const response = await fetch(
+        `${apiBase}/api/get-discount?page=${page}&perPage=${perPage}&search=${search}`,
+        {
+          headers: {
+            Accept: "application/json",
+            "X-XSRF-TOKEN": decodeURIComponent(csrfToken || ""),
+          },
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+      setDiscounts(data.data);
+      setMeta(data.meta || {});
+    } catch (err) {
+      console.error("Failed to fetch discounts:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDiscounts(page, perPage, search);
+  }, [page, perPage]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1); // Reset to page 1 on new search
+    fetchDiscounts(1, perPage, search);
+  };
+
+  const handlePerPageChange = (e) => {
+    setPerPage(Number(e.target.value));
+    setPage(1);
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <>
       <meta charSet="utf-8" />
       <title>Discount - Sika's Clothing</title>
       <meta name="author" content="themesflat.com" />
-   
+
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-    
+
       <link rel="stylesheet" type="text/css" href="css/animate.min.css" />
       <link rel="stylesheet" type="text/css" href="css/animation.css" />
       <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -27,15 +83,10 @@ export default function Discount() {
       <link rel="stylesheet" href="icon/style.css" />
       <link rel="shortcut icon" href="images/favicon.png" />
       <link rel="apple-touch-icon-precomposed" href="images/favicon.png" />
-     
+
       <div id="wrapper">
         <div id="page" className="">
           <div className="layout-wrap">
-            <div id="preload" className="preload-container">
-              <div className="preloading">
-                <span />
-              </div>
-            </div>
             <Sidebar></Sidebar>
             <div className="section-content-right">
               <Header></Header>
@@ -73,37 +124,41 @@ export default function Discount() {
                           <div className="show">
                             <div className="text-tiny">Showing</div>
                             <div className="select">
-                              <select className="">
-                                <option>10</option>
-                                <option>20</option>
-                                <option>30</option>
+                              <select
+                                value={perPage}
+                                onChange={handlePerPageChange}
+                              >
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
                               </select>
                             </div>
                             <div className="text-tiny">entries</div>
                           </div>
-                          <form className="form-search">
+                          <form className="form-search" onSubmit={handleSearch}>
                             <fieldset className="name">
                               <input
                                 type="text"
-                                placeholder="Search here..."
+                                placeholder="Search discount..."
                                 className=""
-                                name="name"
+                                name="search"
                                 tabIndex={2}
-                                defaultValue=""
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
                                 aria-required="true"
-                                required=""
                               />
                             </fieldset>
                             <div className="button-submit">
-                              <button className="" type="submit">
+                              <button type="submit">
                                 <i className="icon-search" />
                               </button>
                             </div>
                           </form>
                         </div>
+
                         <a
                           className="tf-button style-1 w208"
-                          href="add-attributes.html"
+                          href="/sc-dashboard/product/add-discount"
                         >
                           <i className="icon-plus" />
                           Add new
@@ -112,63 +167,149 @@ export default function Discount() {
                       <div className="wg-table table-all-attribute">
                         <ul className="table-title flex gap20 mb-14">
                           <li>
-                            <div className="body-title">Category</div>
+                            <div className="body-title">Title</div>
                           </li>
                           <li>
-                            <div className="body-title">Value</div>
+                            <div className="body-title">Type</div>
+                          </li>
+                          <li>
+                            <div className="body-title">Amount</div>
+                          </li>
+                          <li>
+                            <div className="body-title">Percentage</div>
+                          </li>
+                          <li>
+                            <div className="body-title">
+                              Minimum Value Order
+                            </div>
+                          </li>
+                          <li>
+                            <div className="body-title">Maximum Discount</div>
+                          </li>
+                          <li>
+                            <div className="body-title">Discount Code</div>
+                          </li>
+                          <li>
+                            <div className="body-title">Starts At</div>
+                          </li>
+                          <li>
+                            <div className="body-title">Ends At</div>
+                          </li>
+                          <li>
+                            <div className="body-title">Status</div>
+                          </li>
+                          <li>
+                            <div className="body-title">Usage Limit</div>
+                          </li>
+                          <li>
+                            <div className="body-title">Used Count</div>
                           </li>
                           <li>
                             <div className="body-title">Action</div>
                           </li>
                         </ul>
                         <ul className="flex flex-column">
-                          <li className="attribute-item flex items-center justify-between gap20">
-                            <div className="name">
-                              <a
-                                href="add-attributes.html"
-                                className="body-title-2"
+                          {loading ? (
+                            <li className="text-center py-3">Loading...</li>
+                          ) : discounts.length === 0 ? (
+                            <li className="text-center py-3">
+                              No discounts found.
+                            </li>
+                          ) : (
+                            discounts.map((item) => (
+                              <li
+                                key={item.id}
+                                className="attribute-item flex items-center justify-between gap20"
                               >
-                                Color
-                              </a>
-                            </div>
-                            <div className="body-text">Blue, green, white</div>
-                            <div className="list-icon-function">
-                              <div className="item eye">
-                                <i className="icon-eye" />
-                              </div>
-                              <div className="item edit">
-                                <i className="icon-edit-3" />
-                              </div>
-                              <div className="item trash">
-                                <i className="icon-trash-2" />
-                              </div>
-                            </div>
-                          </li>
+                                <div className="name">
+                                  <span className="body-title-2">
+                                    {item.title}
+                                  </span>
+                                </div>
+                                <div className="body-text">{item.type}</div>
+
+                                <div className="body-text">
+                                  {item.type === "Percentage"
+                                    ? `${item.amount}%`
+                                    : `$${item.amount}`}
+                                </div>
+                                <div className="body-text">{item.percentage}</div>
+                               <div className="body-text">
+                                  {`$${item.minimum_order_value}`}
+                                </div>
+                                <div className="body-text">
+                                  {`$${item.maximum_discount}`}
+                                </div>
+                                <div className="body-text">{item.discount_code}</div>
+                                <div className="body-text">{item.starts_at}</div>
+                                <div className="body-text">{item.ends_at}</div>
+                                <div className="body-text">{item.status}</div>
+                                <div className="body-text">{item.usage_limit}</div>
+                                <div className="body-text">{item.used_count}</div>
+                                <div className="list-icon-function">
+                                  <div className="item eye">
+                                    <i className="icon-eye" />
+                                  </div>
+                                  <div className="item edit">
+                                    <i className="icon-edit-3" />
+                                  </div>
+                                  <div className="item trash">
+                                    <i className="icon-trash-2" />
+                                  </div>
+                                </div>
+                              </li>
+                            ))
+                          )}
                         </ul>
                       </div>
                       <div className="divider" />
                       <div className="flex items-center justify-between flex-wrap gap10">
-                        <div className="text-tiny">Showing 10 entries</div>
+                        <div className="text-tiny">
+                          Showing {meta.from || 0} to {meta.to || 0} of{" "}
+                          {meta.total || 0} entries
+                        </div>
                         <ul className="wg-pagination">
-                          <li>
-                            <a href="#">
-                              <i className="icon-chevron-left" />
-                            </a>
-                          </li>
-                          <li>
-                            <a href="#">1</a>
-                          </li>
-                          <li className="active">
-                            <a href="#">2</a>
-                          </li>
-                          <li>
-                            <a href="#">3</a>
-                          </li>
-                          <li>
-                            <a href="#">
-                              <i className="icon-chevron-right" />
-                            </a>
-                          </li>
+                          {meta.current_page > 1 && (
+                            <li>
+                              <a
+                                onClick={() =>
+                                  handlePageChange(meta.current_page - 1)
+                                }
+                              >
+                                <i className="icon-chevron-left" />
+                              </a>
+                            </li>
+                          )}
+
+                          {[...Array(meta.last_page || 1)].map((_, index) => {
+                            const pageNumber = index + 1;
+                            return (
+                              <li
+                                key={pageNumber}
+                                className={
+                                  pageNumber === meta.current_page
+                                    ? "active"
+                                    : ""
+                                }
+                              >
+                                <a onClick={() => handlePageChange(pageNumber)}>
+                                  {pageNumber}
+                                </a>
+                              </li>
+                            );
+                          })}
+
+                          {meta.current_page < meta.last_page && (
+                            <li>
+                              <a
+                                onClick={() =>
+                                  handlePageChange(meta.current_page + 1)
+                                }
+                              >
+                                <i className="icon-chevron-right" />
+                              </a>
+                            </li>
+                          )}
                         </ul>
                       </div>
                     </div>

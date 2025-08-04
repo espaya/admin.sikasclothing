@@ -37,11 +37,7 @@ export default function AddCateogry() {
         {/* #page */}
         <div id="page" className="">
           <div className="layout-wrap">
-            <div id="preload" className="preload-container">
-              <div className="preloading">
-                <span />
-              </div>
-            </div>
+            
 
             <Sidebar></Sidebar>
 

@@ -21,14 +21,14 @@ export default function Login() {
     }));
   };
 
+  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setErrors({});
 
     try {
-      const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
       // Step 1: Get the CSRF cookie (Laravel will set it in cookies)
       await fetch(`${apiBase}/sanctum/csrf-cookie`, {
         credentials: "include",
@@ -66,7 +66,11 @@ export default function Login() {
 
         // Then redirect
         if (data.redirect_url) {
-          window.location.href = data.redirect_url;
+          setSuccessMessage("Login successful. Redirecting to auth page...");
+          setTimeout(() => {
+            setSuccessMessage("");
+            window.location.href = data.redirect_url;
+          }, 3500);
         } else {
           setErrors({ general: "No redirect URL provided." });
         }
@@ -76,7 +80,7 @@ export default function Login() {
 
       // clear error message after 3.5sec
       setTimeout(() => {
-        document.getElementById("error-message").textContent = "";
+        setErrors({});
       }, 3500);
     } finally {
       setLoading(false);
@@ -91,6 +95,12 @@ export default function Login() {
             <div className="wrap-login-page">
               <div className="flex-grow flex flex-column justify-center gap30">
                 <a href="index.html" id="site-logo-inner"></a>
+                {errors.general && (
+                  <p className="alert alert-danger md-5">{errors.general}</p>
+                )}
+                {successMessage && (
+                  <p className="alert alert-success"> {successMessage} </p>
+                )}
                 <div className="login-box">
                   <div>
                     <h3>Login to account</h3>
@@ -98,15 +108,6 @@ export default function Login() {
                       Enter your email & password to login
                     </div>
                   </div>
-                  {errors.general && (
-                    <p id="error-message" className="text-danger md-5">
-                      {" "}
-                      {errors.general}{" "}
-                    </p>
-                  )}
-                  {successMessage && (
-                    <p className="alert alert-success"> {successMessage} </p>
-                  )}
                   <form
                     action="#"
                     onSubmit={handleSubmit}

@@ -5,75 +5,54 @@ import Sidebar from "../components/Sidebar";
 
 export default function Brand() {
   const [brandOptions, setBrandOptions] = useState([]);
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    last_page: 1,
+  });
+
+  const [loading, setLoading] = useState(false);
+  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   useEffect(() => {
-    const fetchBrandOptions = async (e) => {
+    const fetchBrands = async (page = 1) => {
       try {
-        const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
+        setLoading(true);
 
-        const response = await fetch(`${apiBase}/api/get-brands`, {
+        const response = await fetch(`${apiBase}/api/get-brands?=${page}`, {
           method: "GET",
           credentials: "include",
         });
 
         const data = await response.json();
 
-        if (response.ok && Array.isArray(data)) {
-          setBrandOptions(data.data);
-        }
+        // console.log(data);
+
+        setBrandOptions(data.data);
+        setPagination({
+          current_page: data.current_page,
+          last_page: data.last_page,
+        });
       } catch (err) {
         console.log("error fetching brands");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchBrandOptions();
+    fetchBrands();
   }, []);
 
   return (
     <>
-      <meta charSet="utf-8" />
       <title>Brands - Sika's Clothing</title>
       <meta name="author" content="themesflat.com" />
-      {/* Mobile Specific Metas */}
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1"
-      />
-      {/* Theme Style */}
-      <link rel="stylesheet" type="text/css" href="css/animate.min.css" />
-      <link rel="stylesheet" type="text/css" href="css/animation.css" />
-      <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="css/bootstrap-select.min.css"
-      />
-      <link rel="stylesheet" type="text/css" href="css/style.css" />
-      {/* Font */}
-      <link rel="stylesheet" href="font/fonts.css" />
-      {/* Icon */}
-      <link rel="stylesheet" href="icon/style.css" />
-      {/* Favicon and Touch Icons  */}
-      <link rel="shortcut icon" href="images/favicon.png" />
-      <link rel="apple-touch-icon-precomposed" href="images/favicon.png" />
-      {/* #wrapper */}
       <div id="wrapper">
-        {/* #page */}
         <div id="page" className="">
-          {/* layout-wrap */}
           <div className="layout-wrap">
-            {/* section-menu-left */}
             <Sidebar></Sidebar>
-            {/* /section-menu-left */}
-            {/* section-content-right */}
             <div className="section-content-right">
-              {/* header-dashboard */}
               <Header></Header>
-              {/* /header-dashboard */}
-              {/* main-content */}
               <div className="main-content">
-                {/* main-content-wrap */}
                 <div className="main-content-inner">
-                  {/* main-content-wrap */}
                   <div className="main-content-wrap">
                     <div className="flex items-center flex-wrap justify-between gap20 mb-27">
                       <h3>Brand List</h3>
@@ -153,32 +132,28 @@ export default function Brand() {
                           </li>
                         </ul>
                         <ul className="flex flex-column">
-                          {brandOptions && brandOptions.length > 0 ? (
+                          {brandOptions.length > 0 ? (
                             brandOptions.map((brand, index) => (
                               <li key={index} className="product-item gap14">
+                                {/* Brand Item Structure */}
                                 <div className="image no-bg">
-                                  <img src="images/products/51.png" alt="" />
+                                  <img
+                                    src={`${apiBase}/storage/${brand.logo}`}
+                                    alt={brand.name}
+                                  />
                                 </div>
                                 <div className="flex items-center justify-between gap20 flex-grow">
-                                  <div className="name">
-                                    <a
-                                      href="product-list.html"
-                                      className="body-title-2"
-                                    >
-                                      {brand.logo}
-                                    </a>
-                                  </div>
                                   <div className="body-text">
                                     <a
                                       target="_blank"
-                                      href={brand.website ? brand.website : "#"}
+                                      href={brand.website || "#"}
                                       rel="noopener noreferrer"
                                     >
                                       {brand.name}
                                     </a>
                                   </div>
                                   <div className="body-text">
-                                    {brand.description}
+                                    {brand.description || ""}
                                   </div>
                                   <div className="body-text">20</div>
                                   <div>
@@ -188,7 +163,7 @@ export default function Brand() {
                                   </div>
                                   <div>
                                     <div className="block-tracking">
-                                      {brand.is_featured}
+                                      {brand.is_featured === "1" ? "Yes" : "No"}
                                     </div>
                                   </div>
                                   <div className="list-icon-function">
@@ -206,30 +181,51 @@ export default function Brand() {
                               </li>
                             ))
                           ) : (
-                            <p className="alert alert-info">No brands available.</p>
+                            <p className="alert alert-info">
+                              No brands available.
+                            </p>
                           )}
                         </ul>
                       </div>
                       <div className="divider" />
-                      <div className="flex items-center justify-between flex-wrap gap10">
-                        <div className="text-tiny">Showing 10 entries</div>
+                      <div className="flex items-center justify-between flex-wrap gap10 mt-4">
+                        <div className="text-tiny">
+                          Page {pagination.current_page} of{" "}
+                          {pagination.last_page}
+                        </div>
                         <ul className="wg-pagination">
                           <li>
-                            <a href="#">
+                            <a
+                              onClick={() =>
+                                fetchBrands(pagination.current_page - 1)
+                              }
+                              disabled={pagination.current_page === 1}
+                            >
                               <i className="icon-chevron-left" />
                             </a>
                           </li>
+                          {Array.from(
+                            { length: pagination.last_page },
+                            (_, i) => i + 1
+                          ).map((page) => (
+                            <li
+                              key={page}
+                              className={
+                                page === pagination.current_page ? "active" : ""
+                              }
+                            >
+                              <a onClick={() => fetchBrands(page)}>{page}</a>
+                            </li>
+                          ))}
                           <li>
-                            <a href="#">1</a>
-                          </li>
-                          <li className="active">
-                            <a href="#">2</a>
-                          </li>
-                          <li>
-                            <a href="#">3</a>
-                          </li>
-                          <li>
-                            <a href="#">
+                            <a
+                              onClick={() =>
+                                fetchBrands(pagination.current_page + 1)
+                              }
+                              disabled={
+                                pagination.current_page === pagination.last_page
+                              }
+                            >
                               <i className="icon-chevron-right" />
                             </a>
                           </li>

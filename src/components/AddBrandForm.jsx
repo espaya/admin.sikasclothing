@@ -54,22 +54,22 @@ export default function AddBrandForm() {
 
       const csrfToken = Cookies.get("XSRF-TOKEN");
 
-      // const form = new FormData();
-      // form.append("name", formData.name);
-      // form.append("status", formData.status);
-      // form.append("description", formData.description);
-      // form.append("website", formData.website);
-      // form.append("is_featured", formData.is_featured ? 1 : 0);
-      // if (formData.logo) {
-      //   form.append("logo", formData.logo);
-      // }
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("status", formData.status);
+      form.append("description", formData.description);
+      form.append("website", formData.website);
+      form.append("is_featured", formData.is_featured ? 1 : 0);
+      if (formData.logo) {
+        form.append("logo", formData.logo);
+      }
 
-      console.log(formData);
+      console.log(form);
 
       const response = await fetch(`${apiBase}/api/add-brand`, {
         method: "POST",
         credentials: "include",
-        body: formData,
+        body: form,
         headers: {
           Accept: "application/json",
           "X-XSRF-TOKEN": decodeURIComponent(csrfToken),
@@ -92,6 +92,10 @@ export default function AddBrandForm() {
           is_featured: "",
           website: "",
         });
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 3500);
       }
     } catch (err) {
       setErrors({ general: err.message });
@@ -130,6 +134,7 @@ export default function AddBrandForm() {
                 value={formData.name}
                 aria-required="true"
                 onChange={handleChange}
+                autoComplete="off"
               />
               {errors.name && (
                 <div className="text-tiny text-danger">{errors.name[0]}</div>
@@ -137,15 +142,15 @@ export default function AddBrandForm() {
             </fieldset>
             <fieldset className="category">
               <div className="body-title mb-10">
-                Stauts <span className="tf-color-1">*</span>
+                Status <span className="tf-color-1">*</span>
               </div>
               <div className="select">
                 <select
-                  className=""
+                  name="status"
                   value={formData.status}
                   onChange={handleChange}
                 >
-                  <option>Choose status</option>
+                  <option value="">Choose status</option>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                 </select>
@@ -201,9 +206,13 @@ export default function AddBrandForm() {
                 type="checkbox"
                 name="is_featured"
                 checked={formData.is_featured}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    is_featured: e.target.checked,
+                  }))
+                }
                 className="total-checkbox"
-                value={formData.is_featured}
               />
               <span className="text-tiny">Mark this brand as featured</span>
             </label>
@@ -216,7 +225,9 @@ export default function AddBrandForm() {
         </div>
         <div className="wg-box">
           <fieldset>
-            <div className="body-title mb-10">Upload Logo<span className="tf-color-1"> *</span></div>
+            <div className="body-title mb-10">
+              Upload Logo<span className="tf-color-1"> *</span>
+            </div>
             <div
               className="upload-image mb-16"
               onDrop={handleDrop}
