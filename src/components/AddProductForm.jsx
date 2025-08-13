@@ -189,6 +189,7 @@ export default function AddProductForm() {
     weight: "",
     dimensions: "",
     storage: "",
+    display_in_hero: false,
   });
 
   const [tagInput, setTagInput] = useState("");
@@ -380,8 +381,7 @@ export default function AddProductForm() {
     <>
       {errors.general && (
         <p id="error-message" className="alert alert-danger md-5">
-          {" "}
-          {errors.general}{" "}
+          {errors.general}
         </p>
       )}
       {successMessage && (
@@ -1052,24 +1052,49 @@ export default function AddProductForm() {
             )}
           </fieldset>
 
-          <fieldset className="name">
-            <div className="body-title mb-10">
-              Featured <span className="tf-color-1"></span>
-            </div>
-            <div className="select mb-10">
-              <label className="flex items-center gap-2">
-                <input
-                  className="total-checkbox"
-                  type="checkbox"
-                  name="featured"
-                  checked={formData.featured}
-                  onChange={handleChange}
-                  value="1"
-                />
-                <span className="text-tiny">Mark this product as featured</span>
-              </label>
-            </div>
-          </fieldset>
+          <div className="gap22 cols">
+            <fieldset className="name">
+              <div className="body-title mb-10">
+                Featured <span className="tf-color-1"></span>
+              </div>
+              <div className="select mb-10">
+                <label className="flex items-center gap-2">
+                  <input
+                    className="total-checkbox"
+                    type="checkbox"
+                    name="featured"
+                    checked={formData.featured}
+                    onChange={handleChange}
+                    value="1"
+                  />
+                  <span className="text-tiny">
+                    Mark this product as featured
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset className="name">
+              <div className="body-title mb-10">
+                Display in hero? <span className="tf-color-1"></span>
+              </div>
+              <div className="select mb-10">
+                <label className="flex items-center gap-2">
+                  <input
+                    className="total-checkbox"
+                    type="checkbox"
+                    name="display_in_hero"
+                    checked={formData.display_in_hero}
+                    onChange={handleChange}
+                    value="1"
+                  />
+                  <span className="text-tiny">
+                    Mark this product to be displayed in the hero
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
 
           <div className="cols gap10">
             <button

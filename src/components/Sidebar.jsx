@@ -12,7 +12,7 @@ export default function Sidebar() {
   return (
     <div className={`section-menu-left ${collapsed ? "collapsed" : ""}`}>
       <div className="box-logo">
-        <a href="index.html" id="site-logo-inner">
+        <a href="#" id="site-logo-inner">
           <img
             className=""
             id="logo_header"
@@ -258,40 +258,31 @@ export default function Sidebar() {
                 </ul>
               </li>
               <li className="menu-item has-children">
-                <a href="#" className="menu-item-button">
-                  <div className="icon">
-                    <i className="icon-user-plus"></i>
-                  </div>
-                  <div className="text">Roles</div>
-                </a>
-                <ul className="sub-menu">
-                  <li className="sub-menu-item">
-                    <a href="all-roles.html" className="">
-                      <div className="text">All roles</div>
-                    </a>
-                  </li>
-                  <li className="sub-menu-item">
-                    <a href="create-role.html" className="">
-                      <div className="text">Create role</div>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li className="menu-item">
-                <a href="gallery.html" className="">
+                <a
+                  href="#"
+                  className="menu-item-button"
+                  onClick={() => toggleDropdown("hero")}
+                >
                   <div className="icon">
                     <i className="icon-image"></i>
                   </div>
-                  <div className="text">Gallery</div>
+                  <div className="text">Hero Slider</div>
                 </a>
-              </li>
-              <li className="menu-item">
-                <a href="report.html" className="">
-                  <div className="icon">
-                    <i className="icon-pie-chart"></i>
-                  </div>
-                  <div className="text">Report</div>
-                </a>
+                <ul
+                  className="sub-menu"
+                  style={{ display: openDropdown === "hero" ? "block" : "" }}
+                >
+                  <li className="sub-menu-item">
+                    <a href="/sc-dashboard/hero" className="">
+                      <div className="text">All hero</div>
+                    </a>
+                  </li>
+                  <li className="sub-menu-item">
+                    <a href="/sc-dashboard/hero/add" className="">
+                      <div className="text">Create hero</div>
+                    </a>
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>

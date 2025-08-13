@@ -18,12 +18,18 @@ import ProductList from "./views/ProductList.jsx";
 import Menu from "./views/Menu.jsx";
 import AddMenu from "./views/Addmenu.jsx";
 import Settings from "./views/Settings.jsx";
+import AddHero from "./views/AddHero.jsx";
+import Hero from "./views/Hero.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
   LOGIN: {
     path: "/",
-    element: <Login />,
+    element: (
+      <GuestRoute>
+        <Login />
+      </GuestRoute>
+    ),
     name: "Login",
     isProtected: false,
   },
@@ -131,6 +137,20 @@ export const ROUTE_CONFIG = {
     path: "/sc-dashboard/menu/add",
     element: <AddMenu />,
     name: "Add Menu",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  HERO: {
+    path: "/sc-dashboard/hero",
+    element: <Hero />,
+    name: "All Hero",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  ADD_HERO: {
+    path: "/sc-dashboard/hero/add",
+    element: <AddHero />,
+    name: "Add Hero",
     isProtected: true,
     roles: ["ADMIN"],
   },
