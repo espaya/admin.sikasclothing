@@ -1,8 +1,11 @@
 import { useContext } from "react";
 import { AuthContext } from "../auth/AuthContext";
+import logoutUser from "../auth/Logout";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <div className="header-dashboard">
@@ -392,7 +395,14 @@ export default function Header() {
                   </a>
                 </li>
                 <li>
-                  <a href="login.html" className="user-item">
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      logoutUser(navigate);
+                    }}
+                    className="user-item"
+                  >
                     <div className="icon">
                       <i className="icon-log-out"></i>
                     </div>
