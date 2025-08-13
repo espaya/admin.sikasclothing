@@ -9,7 +9,7 @@ import MenuForms from "../components/MenuForms";
 export default function AddMenu() {
   return (
     <>
-      <body className="body">
+      <div className="body">
         <div id="wrapper">
           <div id="page" className="">
             <div className="layout-wrap">
@@ -47,7 +47,6 @@ export default function AddMenu() {
                       </div>
 
                       <MenuForms></MenuForms>
-
                     </div>
                   </div>
                   <Footer></Footer>
@@ -56,7 +55,7 @@ export default function AddMenu() {
             </div>
           </div>
         </div>
-      </body>
+      </div>
     </>
   );
 }

@@ -287,19 +287,43 @@ export default function ProductList() {
                                           // Clean and normalize the color string
                                           const color = rawColor
                                             .replace(/["']/g, "")
-                                            .trim()
-                                            .toLowerCase();
+                                            .trim();
 
-                                          // Test if color is valid
-                                          const isValidColor = (c) => {
+                                          // Regex checks for color formats
+                                          const isHex = (c) =>
+                                            /^#([0-9A-F]{3}){1,2}$/i.test(c);
+
+                                          const isRgb = (c) =>
+                                            /^rgba?\(\s*(\d{1,3}\s*,){2,3}\s*[\d.]+\s*\)$/i.test(
+                                              c
+                                            );
+
+                                          const isHsl = (c) =>
+                                            /^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%(\s*,\s*[\d.]+\s*)?\)$/i.test(
+                                              c
+                                            );
+
+                                          // Also validate using browser's color parser
+                                          const isValidCssColor = (c) => {
                                             const s = new Option().style;
+                                            s.color = "";
                                             s.color = c;
                                             return s.color !== "";
                                           };
 
-                                          const finalColor = isValidColor(color)
-                                            ? color
-                                            : "#ccc";
+                                          // Decide final color
+                                          let finalColor = "#ccc"; // default fallback
+
+                                          if (
+                                            isHex(color) ||
+                                            isRgb(color) ||
+                                            isHsl(color)
+                                          ) {
+                                            finalColor = color;
+                                          } else if (isValidCssColor(color)) {
+                                            // covers named colors like 'red', 'blue', etc.
+                                            finalColor = color;
+                                          }
 
                                           return (
                                             <div
