@@ -4,7 +4,6 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 
-
 export default function Spotlight() {
   const apiBase = import.meta.env.VITE_API_URL;
   const [spotlights, setSpotlights] = useState([]);
@@ -154,9 +153,6 @@ export default function Spotlight() {
                             <div className="body-title">Link Url</div>
                           </li>
                           <li>
-                            <div className="body-title">Color</div>
-                          </li>
-                          <li>
                             <div className="body-title">Action</div>
                           </li>
                         </ul>
@@ -186,7 +182,7 @@ export default function Spotlight() {
                                     <div
                                       style={{
                                         width: "100px",
-                                        height: "100px",
+                                        height: "50px",
                                         backgroundColor: isValidColor(
                                           spotlight.bg_color
                                         )
@@ -210,12 +206,12 @@ export default function Spotlight() {
                                     {spotlight.link_text}
                                   </div>
                                   <div className="body-text">
-                                    {spotlight.link_url}
-                                  </div>
-                                  <div className="body-text">
-                                    {isValidColor(spotlight.bg_color)
-                                      ? spotlight.bg_color
-                                      : "—"}
+                                    <a
+                                      target="_blank"
+                                      href={spotlight.link_url}
+                                    >
+                                      {spotlight.link_url}
+                                    </a>
                                   </div>
                                   <div className="list-icon-function">
                                     <div className="item eye">
