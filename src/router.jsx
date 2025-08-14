@@ -22,6 +22,8 @@ import AddHero from "./views/AddHero.jsx";
 import Hero from "./views/Hero.jsx";
 import Spotlight from "./views/Spotlight.jsx";
 import AddSpotlight from "./views/AddSpotlight.jsx";
+import CallToAction from "./views/CallToAction.jsx";
+import AddCallToAction from "./views/AddCallToAction.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
@@ -153,6 +155,21 @@ export const ROUTE_CONFIG = {
     path: "/sc-dashboard/hero/add",
     element: <AddHero />,
     name: "Add Hero",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+  CALLTOACTION: {
+    path: "/sc-dashboard/call-to-action",
+    element: <CallToAction />,
+    name: "Call to Action",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  ADD_CALLTOACTION: {
+    path: "/sc-dashboard/call-to-action/add",
+    element: <AddCallToAction />,
+    name: "Add Call to Action",
     isProtected: true,
     roles: ["ADMIN"],
   },

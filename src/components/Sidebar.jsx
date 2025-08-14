@@ -313,6 +313,74 @@ export default function Sidebar() {
                   </li>
                 </ul>
               </li>
+              <li className="menu-item has-children">
+                <a
+                  href="#"
+                  className="menu-item-button"
+                  onClick={() => toggleDropdown("call-to-action")}
+                >
+                  <div className="icon">
+                   <i className="icon-arrow-right"></i>
+                  </div>
+                  <div className="text">Call to action</div>
+                </a>
+                <ul
+                  className="sub-menu"
+                  style={{
+                    display: openDropdown === "call-to-action" ? "block" : "",
+                  }}
+                >
+                  <li className="sub-menu-item">
+                    <a href="/sc-dashboard/call-to-action" className="">
+                      <div className="text">All Call to Actions</div>
+                    </a>
+                  </li>
+                  <li className="sub-menu-item">
+                    <a href="/sc-dashboard/call-to-action/add" className="">
+                      <div className="text">Create Call to Action</div>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li className="menu-item has-children">
+                <a
+                  href="#"
+                  className="menu-item-button"
+                  onClick={() => toggleDropdown("blog")}
+                >
+                  <div className="icon">
+                 <i className="icon-book-open"></i>
+                  </div>
+                  <div className="text">Blog</div>
+                </a>
+                <ul
+                  className="sub-menu"
+                  style={{
+                    display: openDropdown === "blog" ? "block" : "",
+                  }}
+                >
+                  <li className="sub-menu-item">
+                    <a href="#" className="">
+                      <div className="text">All Posts</div>
+                    </a>
+                  </li>
+                  <li className="sub-menu-item">
+                    <a href="#" className="">
+                      <div className="text">Create New</div>
+                    </a>
+                  </li>
+                  <li className="sub-menu-item">
+                    <a href="#" className="">
+                      <div className="text">All Category</div>
+                    </a>
+                  </li>
+                  <li className="sub-menu-item">
+                    <a href="#" className="">
+                      <div className="text">Create Category</div>
+                    </a>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </div>
         </div>
