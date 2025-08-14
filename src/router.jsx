@@ -20,6 +20,8 @@ import AddMenu from "./views/Addmenu.jsx";
 import Settings from "./views/Settings.jsx";
 import AddHero from "./views/AddHero.jsx";
 import Hero from "./views/Hero.jsx";
+import Spotlight from "./views/Spotlight.jsx";
+import AddSpotlight from "./views/AddSpotlight.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
@@ -154,6 +156,22 @@ export const ROUTE_CONFIG = {
     isProtected: true,
     roles: ["ADMIN"],
   },
+
+  SPOTLIGHT: {
+    path: "/sc-dashboard/spotlight",
+    element: <Spotlight />,
+    name: "All Spotlight",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  ADD_SPOTLIGHT: {
+    path: "/sc-dashboard/spotlight/add",
+    element: <AddSpotlight />,
+    name: "All Spotlight",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
   SETTINGS: {
     path: "/sc-dashboard/settings",
     element: <Settings />,

@@ -284,6 +284,35 @@ export default function Sidebar() {
                   </li>
                 </ul>
               </li>
+              <li className="menu-item has-children">
+                <a
+                  href="#"
+                  className="menu-item-button"
+                  onClick={() => toggleDropdown("spotlight")}
+                >
+                  <div className="icon">
+                    <i className="icon-star"></i>
+                  </div>
+                  <div className="text">Spotlight</div>
+                </a>
+                <ul
+                  className="sub-menu"
+                  style={{
+                    display: openDropdown === "spotlight" ? "block" : "",
+                  }}
+                >
+                  <li className="sub-menu-item">
+                    <a href="/sc-dashboard/spotlight" className="">
+                      <div className="text">All spotlight</div>
+                    </a>
+                  </li>
+                  <li className="sub-menu-item">
+                    <a href="/sc-dashboard/spotlight/add" className="">
+                      <div className="text">Create spotlight</div>
+                    </a>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </div>
         </div>
