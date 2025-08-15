@@ -9,7 +9,7 @@ export default function Menu() {
   const [menus, setMenus] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErors] = useState({});
-  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const apiBase = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchMenus = async (e) => {
@@ -39,7 +39,7 @@ export default function Menu() {
             setErors({ general: data.message });
           }
         } else {
-          setMenus(data);
+          setMenus(data.data || []);
         }
       } catch (err) {
         setErors({ general: err });
@@ -68,7 +68,7 @@ export default function Menu() {
                         <h3>List Page</h3>
                         <ul className="breadcrumbs flex items-center flex-wrap justify-start gap10">
                           <li>
-                            <a href="index.html">
+                            <a href="#">
                               <div className="text-tiny">Dashboard</div>
                             </a>
                           </li>
@@ -148,51 +148,97 @@ export default function Menu() {
                               />
                             </li>
                             <li>
-                              <div className="body-title">ID</div>
+                              <div className="body-title">Order</div>
                             </li>
                             <li>
-                              <div className="body-title">Name</div>
+                              <div className="body-title">Title</div>
                             </li>
                             <li>
-                              <div className="body-title">Template</div>
+                              <div className="body-title">Source Type</div>
                             </li>
                             <li>
-                              <div className="body-title">Created at</div>
+                              <div className="body-title">Source ID</div>
                             </li>
                             <li>
-                              <div className="body-title">Status</div>
+                              <div className="body-title">Custom Url</div>
+                            </li>
+                            <li>
+                              <div className="body-title">Location</div>
+                            </li>
+                            <li>
+                              <div className="body-title">Parent</div>
+                            </li>
+                            <li>
+                              <div className="body-title">Active</div>
                             </li>
                             <li>
                               <div className="body-title">Action</div>
                             </li>
                           </ul>
-                          <ul className="flex flex-column">
-                            <li className="countries-item">
-                              <div>
-                                <input
-                                  className="checkbox-item"
-                                  type="checkbox"
-                                />
-                              </div>
-                              <div className="body-text">#01</div>
-                              <div className="body-text">Home 1</div>
-                              <div className="body-text">Default</div>
-                              <div className="body-text">20 Nov 2023</div>
-                              <div>
-                                <div className="block-published">Published</div>
-                              </div>
-                              <div>
-                                <div className="list-icon-function">
-                                  <div className="item edit">
-                                    <i className="icon-edit-3"></i>
-                                  </div>
-                                  <div className="item trash">
-                                    <i className="icon-trash-2"></i>
-                                  </div>
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
+                          {loading ? (
+                            <p className="text-info">Loading</p>
+                          ) : (
+                            <ul className="flex flex-column">
+                              {menus.length > 0 ? (
+                                menus.map((menu) => (
+                                  <li className="countries-item" key={menu.id}>
+                                    <div>
+                                      <input
+                                        className="checkbox-item"
+                                        type="checkbox"
+                                      />
+                                    </div>
+                                    <div className="body-text">
+                                      #{menu.order}
+                                    </div>
+                                    <div className="body-text">
+                                      {menu.title}
+                                    </div>
+                                    <div className="body-text">
+                                      {menu.source_type}
+                                    </div>
+                                    <div className="body-text">
+                                      {menu.source_id ?? "-"}
+                                    </div>
+                                    <div className="body-text">
+                                      {menu.custom_url ?? "-"}
+                                    </div>
+                                    <div className="body-text">
+                                      {menu.location}
+                                    </div>
+                                    <div className="body-text">
+                                      {menu.parent_id ?? "-"}
+                                    </div>
+                                    <div>
+                                      <div
+                                        className={
+                                          menu.is_active
+                                            ? "block-published"
+                                            : "block-unpublished"
+                                        }
+                                      >
+                                        {menu.is_active
+                                          ? "Published"
+                                          : "Unpublished"}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="list-icon-function">
+                                        <div className="item edit">
+                                          <i className="icon-edit-3"></i>
+                                        </div>
+                                        <div className="item trash">
+                                          <i className="icon-trash-2"></i>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </li>
+                                ))
+                              ) : (
+                                <li className="body-text">No menus found</li>
+                              )}
+                            </ul>
+                          )}
                         </div>
                         <div className="divider"></div>
                         <div className="flex items-center justify-between flex-wrap gap10">
