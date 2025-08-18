@@ -17,6 +17,7 @@ export default function AddSpotlight() {
     link_url: "",
     bg_color: "",
     bg_image: null,
+    add_to_megamenu: "",
   });
 
   // Handle text, link, color inputs
@@ -90,6 +91,7 @@ export default function AddSpotlight() {
           link_url: "",
           bg_color: "",
           bg_image: null,
+          add_to_megamenu: "",
         });
         setPreviewImage(null);
         setSuccessMsg(data.message);
@@ -307,6 +309,32 @@ export default function AddSpotlight() {
                           {errors.bg_image && (
                             <div class="text-tiny text-danger">
                               {errors.bg_image[0]}
+                            </div>
+                          )}
+                        </fieldset>
+
+                        <fieldset className="name">
+                          <label className="d-flex align-items-center gap-2">
+                            <input
+                              type="checkbox"
+                              value={1}
+                              name="add_to_megamenu"
+                              checked={formData.add_to_megamenu}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  add_to_megamenu: e.target.checked,
+                                })
+                              }
+                            />
+                            <span className="body-title mb-0">
+                              Add this spotlight to the megamenu?
+                            </span>
+                          </label>
+
+                          {errors.add_to_megamenu && (
+                            <div className="text-tiny text-danger">
+                              {errors.add_to_megamenu[0]}
                             </div>
                           )}
                         </fieldset>
