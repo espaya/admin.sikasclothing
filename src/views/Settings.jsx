@@ -4,9 +4,13 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import General from "../components/settings/General";
 import Payment from "../components/settings/Payment";
+import Shipping from "../components/settings/Shipping";
+import TaxRate from "../components/settings/TaxRate";
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("general"); // Track active tab
+  const [errors, setErrors] = useState({});
+  const [successMsg, setSuccessMsg] = useState("");
 
   return (
     <>
@@ -42,6 +46,12 @@ export default function Settings() {
                           </li>
                         </ul>
                       </div>
+                      {errors?.general && (
+                        <p className="alert alert-danger">{errors.general}</p>
+                      )}
+                      {successMsg && (
+                        <p className="alert alert-success">{successMsg}</p>
+                      )}
                       <div className="form-setting form-style-2">
                         <div className="wg-box h-full">
                           <div>
@@ -54,9 +64,7 @@ export default function Settings() {
                                   onClick={() => setActiveTab("general")}
                                 >
                                   <span className="inner">
-                                    <span className="h6">
-                                      General Information
-                                    </span>
+                                    <span className="h6">General</span>
                                   </span>
                                 </li>
                                 <li
@@ -67,6 +75,26 @@ export default function Settings() {
                                 >
                                   <span className="inner">
                                     <span className="h6">Payment</span>
+                                  </span>
+                                </li>
+                                <li
+                                  className={`item-title ${
+                                    activeTab === "shipping" ? "active" : ""
+                                  }`}
+                                  onClick={() => setActiveTab("shipping")}
+                                >
+                                  <span className="inner">
+                                    <span className="h6">Shipping</span>
+                                  </span>
+                                </li>
+                                <li
+                                  className={`item-title ${
+                                    activeTab === "tax" ? "active" : ""
+                                  }`}
+                                  onClick={() => setActiveTab("tax")}
+                                >
+                                  <span className="inner">
+                                    <span className="h6">Tax</span>
                                   </span>
                                 </li>
                               </ul>
@@ -96,6 +124,38 @@ export default function Settings() {
                                   }}
                                 >
                                   <Payment />
+                                </div>
+                                <div
+                                  className={`widget-content-inner ${
+                                    activeTab === "shipping" ? "active" : ""
+                                  }`}
+                                  style={{
+                                    display:
+                                      activeTab === "shipping"
+                                        ? "block"
+                                        : "none",
+                                  }}
+                                >
+                                  <Shipping
+                                    errors={errors}
+                                    setErrors={setErrors}
+                                    setSuccessMsg={setSuccessMsg}
+                                  />
+                                </div>
+                                <div
+                                  className={`widget-content-inner ${
+                                    activeTab === "tax" ? "active" : ""
+                                  }`}
+                                  style={{
+                                    display:
+                                      activeTab === "tax" ? "block" : "none",
+                                  }}
+                                >
+                                  <TaxRate
+                                    errors={errors}
+                                    setErrors={setErrors}
+                                    setSuccessMsg={setSuccessMsg}
+                                  />
                                 </div>
                               </div>
                             </div>

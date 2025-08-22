@@ -105,7 +105,7 @@ export default function General() {
             </div>
           </fieldset>
         </div>
-        <div className="wg-box">
+        <div className="wg-ox">
           <fieldset>
             <div class="flex gap24 mobile-wrap">
               <div class="flex gap24 w-half">

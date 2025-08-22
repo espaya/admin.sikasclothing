@@ -24,6 +24,8 @@ import Spotlight from "./views/Spotlight.jsx";
 import AddSpotlight from "./views/AddSpotlight.jsx";
 import CallToAction from "./views/CallToAction.jsx";
 import AddCallToAction from "./views/AddCallToAction.jsx";
+import ShippingMethodLists from "./views/ShippingMethodLists.jsx";
+import TaxLists from "./views/Taxlists.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
@@ -192,6 +194,22 @@ export const ROUTE_CONFIG = {
   SETTINGS: {
     path: "/sc-dashboard/settings",
     element: <Settings />,
+    name: "Settings",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+  SHIPPING_METHODS: {
+    path: "/sc-dashboard/settings/shipping-methods",
+    element: <ShippingMethodLists />,
+    name: "Settings",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+  TAX_RATES: {
+    path: "/sc-dashboard/settings/tax-rates",
+    element: <TaxLists />,
     name: "Settings",
     isProtected: true,
     roles: ["ADMIN"],

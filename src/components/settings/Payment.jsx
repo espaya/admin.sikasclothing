@@ -2,8 +2,8 @@ export default function Payment() {
   return (
     <>
       <form className="tf-section-2 form-add-product form-setting ">
-        <div className="wg-box">
-          <div className="gap22 cols">
+        <div className="w-box">
+          {/* <div className="gap22 cols"> */}
             <div class="flex gap10">
               <input class="" type="checkbox" />
               <div class="body-text">
@@ -11,7 +11,7 @@ export default function Payment() {
               </div>
             </div>
             <fieldset className="category">
-              <div className="body-title mb-10">
+              <div className="body-title mb-10 mt-3">
                 Payment Gateway <span className="tf-color-1">*</span>
               </div>
               <div className="select">
@@ -26,7 +26,7 @@ export default function Payment() {
                 </select>
               </div>
             </fieldset>
-          </div>
+          {/* </div> */}
         </div>
 
         <div className="wg-box" style={{ boxShadow: 'none' }}>
