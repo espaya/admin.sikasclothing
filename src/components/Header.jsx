@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "../auth/AuthContext";
-import logoutUser from "../auth/Logout";
+import useLogout from "../auth/Logout";
 import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const logout = useLogout();
 
   return (
     <div className="header-dashboard">
@@ -399,7 +400,7 @@ export default function Header() {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      logoutUser(navigate);
+                      logout(navigate);
                     }}
                     className="user-item"
                   >

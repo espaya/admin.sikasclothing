@@ -13,9 +13,9 @@ const ProtectedRoute = ({ children, roles = [] }) => {
 
   if (!user) return <Navigate to="/" state={{ from: location }} replace />;
 
-  if (roles.length > 0 && !roles.includes(user.role)) {
-    return <Navigate to="/404" replace />;
-  }
+  // if (roles.length > 0 && !roles.includes(user.role)) {
+  //   return <Navigate to="/404" replace />;
+  // }
 
   return children;
 };

@@ -26,6 +26,11 @@ import CallToAction from "./views/CallToAction.jsx";
 import AddCallToAction from "./views/AddCallToAction.jsx";
 import ShippingMethodLists from "./views/ShippingMethodLists.jsx";
 import TaxLists from "./views/Taxlists.jsx";
+import NotFound from "./views/NotFound.jsx";
+import AllPosts from "./views/AllPosts.jsx";
+import CreatePost from "./views/CreatePost.jsx";
+import PostCategory from "./views/PostCategory.jsx";
+import CreatePostCategory from "./views/CreatePostCategory.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
@@ -214,12 +219,47 @@ export const ROUTE_CONFIG = {
     isProtected: true,
     roles: ["ADMIN"],
   },
-  //   NOT_FOUND: {
-  //     path: "*",
-  //     element: <NotFound />,
-  //     name: "Not Found",
-  //     isProtected: false,
-  //   },
+
+  // Blog section
+  BLOG: {
+    path: "/sc-dashboard/blog",
+    element: <AllPosts />,
+    name: "All Posts",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+  CREATE_POST: {
+    path: "/sc-dashboard/blog/create",
+    element: <CreatePost />,
+    name: "Create Post",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+  POST_CATEGORY: {
+    path: "/sc-dashboard/blog/category",
+    element: <PostCategory />,
+    name: "Post Category",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+  CREATE_POST_CATEGORY: {
+    path: "/sc-dashboard/blog/category/create",
+    element: <CreatePostCategory />,
+    name: "Create Post Category",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+
+    NOT_FOUND: {
+      path: "*",
+      element: <NotFound />,
+      name: "Not Found",
+      isProtected: false,
+    },
 };
 
 // Helper functions for route access

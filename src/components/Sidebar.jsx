@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { PATHS } from "../router";
 
 export default function Sidebar() {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -35,12 +37,15 @@ export default function Sidebar() {
             <div className="center-heading">Main Home</div>
             <ul className="menu-list">
               <li className="menu-item active">
-                <a href="/sc-dashboard" className="menu-item-button">
+                <Link
+                  to={{ pathname: PATHS.ADMIN }}
+                  className="menu-item-button"
+                >
                   <div className="icon">
                     <i className="icon-grid"></i>
                   </div>
                   <div className="text">Dashboard</div>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -65,18 +70,17 @@ export default function Sidebar() {
                   }}
                 >
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/product/add-product" className="">
+                    <Link to={{ pathname: PATHS.ADDPRODUCT }} className="">
                       <div className="text">Add Product</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/products" className="">
+                    <Link to={{ pathname: PATHS.PRODUCTLIST }} className="">
                       <div className="text">Product List</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
-
               <li className="menu-item has-children">
                 <a
                   href="#"
@@ -95,14 +99,14 @@ export default function Sidebar() {
                   }}
                 >
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/product/category" className="">
+                    <Link to={{ pathname: PATHS.CATEGORY }} className="">
                       <div className="text">Category list</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/product/add-category" className="">
+                    <Link to={{ pathname: PATHS.ADDCATEGORY }} className="">
                       <div className="text">New category</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
@@ -124,18 +128,17 @@ export default function Sidebar() {
                   }}
                 >
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/product/discount" className="">
+                    <Link to={{ pathname: PATHS.DISCOUNT }} className="">
                       <div className="text">All Discounts</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/product/add-discount" className="">
+                    <Link to={{ pathname: PATHS.ADDDISCOUNT }} className="">
                       <div className="text">Add Discount</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
-
               <li className="menu-item has-children">
                 <a
                   href="#"
@@ -154,18 +157,17 @@ export default function Sidebar() {
                   }}
                 >
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/product/brands" className="">
+                    <Link to={{ pathname: PATHS.BRANDS }} className="">
                       <div className="text">Brands</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/product/add-brand" className="">
+                    <Link to={{ pathname: PATHS.ADDBRAND }} className="">
                       <div className="text">Add Brand</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
-
               <li className="menu-item has-children">
                 <a
                   href="#"
@@ -184,23 +186,22 @@ export default function Sidebar() {
                   }}
                 >
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/orderlist" className="">
+                    <Link to={{ pathname: PATHS.ORDERLIST }} className="">
                       <div className="text">Order List</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="" className="">
+                    <Link href="" className="">
                       <div className="text">Order Tracking</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/order-detail" className="">
+                    <Link to={{ pathname: PATHS.ORDERDETAIL }} className="">
                       <div className="text">Details</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
-
               <li className="menu-item has-children">
                 <a
                   href="#"
@@ -219,14 +220,14 @@ export default function Sidebar() {
                   }}
                 >
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/customers" className="">
+                    <Link to={{ pathname: PATHS.CUSTOMERS }} className="">
                       <div className="text">All Customers</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/customers/banned" className="">
+                    <Link to={{ pathname: PATHS.BANNEDCUSTOMERS }} className="">
                       <div className="text">Banned Customers</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
@@ -246,14 +247,14 @@ export default function Sidebar() {
                   style={{ display: openDropdown === "menu" ? "block" : "" }}
                 >
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/menu" className="">
+                    <Link to={{ pathname: PATHS.MENU }} className="">
                       <div className="text">All Menus</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/menu/add" className="">
+                    <Link to={{ pathname: PATHS.ADDMENU }} className="">
                       <div className="text">Create menu</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
@@ -273,14 +274,14 @@ export default function Sidebar() {
                   style={{ display: openDropdown === "hero" ? "block" : "" }}
                 >
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/hero" className="">
+                    <Link to={{ pathname: PATHS.HERO }} className="">
                       <div className="text">All hero</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/hero/add" className="">
+                    <Link to={{ pathname: PATHS.ADD_HERO }} className="">
                       <div className="text">Create hero</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
@@ -302,14 +303,14 @@ export default function Sidebar() {
                   }}
                 >
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/spotlight" className="">
+                    <Link to={{ pathname: PATHS.SPOTLIGHT }} className="">
                       <div className="text">All spotlight</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/spotlight/add" className="">
+                    <Link to={{ pathname: PATHS.ADD_SPOTLIGHT }} className="">
                       <div className="text">Create spotlight</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
@@ -320,7 +321,7 @@ export default function Sidebar() {
                   onClick={() => toggleDropdown("call-to-action")}
                 >
                   <div className="icon">
-                   <i className="icon-arrow-right"></i>
+                    <i className="icon-arrow-right"></i>
                   </div>
                   <div className="text">Call to action</div>
                 </a>
@@ -331,14 +332,17 @@ export default function Sidebar() {
                   }}
                 >
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/call-to-action" className="">
+                    <Link to={{ pathname: PATHS.CALLTOACTION }} className="">
                       <div className="text">All Call to Actions</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="/sc-dashboard/call-to-action/add" className="">
+                    <Link
+                      to={{ pathname: PATHS.ADD_CALLTOACTION }}
+                      className=""
+                    >
                       <div className="text">Create Call to Action</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
@@ -349,7 +353,7 @@ export default function Sidebar() {
                   onClick={() => toggleDropdown("blog")}
                 >
                   <div className="icon">
-                 <i className="icon-book-open"></i>
+                    <i className="icon-book-open"></i>
                   </div>
                   <div className="text">Blog</div>
                 </a>
@@ -360,24 +364,36 @@ export default function Sidebar() {
                   }}
                 >
                   <li className="sub-menu-item">
-                    <a href="#" className="">
+                    <Link to={{ pathname: PATHS.BLOG }} href="#" className="">
                       <div className="text">All Posts</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="#" className="">
+                    <Link
+                      to={{ pathname: PATHS.CREATE_POST }}
+                      href="#"
+                      className=""
+                    >
                       <div className="text">Create New</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="#" className="">
+                    <Link
+                      to={{ pathname: PATHS.POST_CATEGORY }}
+                      href="#"
+                      className=""
+                    >
                       <div className="text">All Category</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <a href="#" className="">
+                    <Link
+                      to={{ pathname: PATHS.CREATE_POST_CATEGORY }}
+                      href="#"
+                      className=""
+                    >
                       <div className="text">Create Category</div>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
