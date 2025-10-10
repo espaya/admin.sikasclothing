@@ -395,7 +395,24 @@ export default function Sidebar() {
                       <div className="text">Create Category</div>
                     </Link>
                   </li>
+                  <li className="sub-menu-item">
+                    <Link
+                      to={{ pathname: PATHS.POST_COMMENTS }}
+                      href="#"
+                      className=""
+                    >
+                      <div className="text">Comments</div>
+                    </Link>
+                  </li>
                 </ul>
+              </li>
+              <li className="menu-item">
+                <Link to={{ pathname: PATHS.CONTACTS }} href="#" className="">
+                  <div className="icon">
+                    <i className="icon-mail"></i>
+                  </div>
+                  <div className="text">Contacts</div>
+                </Link>
               </li>
             </ul>
           </div>

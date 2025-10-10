@@ -30,12 +30,8 @@ export default function Header() {
           </div>
         </div>
         <div className="header-grid">
-          <div className="header-item country">
-            <select className="image-select no-text">
-              <option data-thumbnail="/assets/images/country/1.png">ENG</option>
-              <option data-thumbnail="/assets/images/country/9.png">VIE</option>
-            </select>
-          </div>
+
+
           <div className="header-item button-dark-light">
             <i className="icon-moon"></i>
           </div>

@@ -3,8 +3,9 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import Spinner from "../components/Spinner";
-import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
+import { PATHS } from "../router";
 
 export default function ProductList() {
   const [productList, setProductList] = useState([]);
@@ -21,7 +22,7 @@ export default function ProductList() {
     search: "",
   });
 
-  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const apiBase = import.meta.env.VITE_API_URL;
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -96,31 +97,42 @@ export default function ProductList() {
     }
   };
 
-  useEffect(() => {
-    const fetchProductList = async (page = 1) => {
-      try {
-        setLoading(true);
+  const fetchProductList = async (page = 1) => {
+    try {
+      setLoading(true);
 
-        const response = await fetch(`${apiBase}/api/get-product`, {
-          credentials: "include",
-          method: "GET",
-        });
+      const response = await fetch(`${apiBase}/api/get-product`, {
+        credentials: "include",
+        method: "GET",
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
+      // Check if data and data.data exist before setting state
+      if (data && data.data) {
         setProductList(data.data);
 
         setPagination({
-          current_page: data.current_page,
-          last_page: data.last_page,
+          current_page: data.current_page || 1,
+          last_page: data.last_page || 1,
         });
-      } catch (err) {
-        console.error(err.message);
-      } finally {
-        setLoading(false);
+      } else {
+        // Handle case where data structure is different
+        setProductList(data || []); // Fallback to empty array
+        setPagination({
+          current_page: 1,
+          last_page: 1,
+        });
       }
-    };
+    } catch (err) {
+      console.error(err.message);
+      setProductList([]); // Set empty array on error
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchProductList();
   }, []);
 
@@ -144,17 +156,17 @@ export default function ProductList() {
                         <h3>Product List</h3>
                         <ul className="breadcrumbs flex items-center flex-wrap justify-start gap10">
                           <li>
-                            <a href="index.html">
+                            <Link to={PATHS.ADMIN}>
                               <div className="text-tiny">Dashboard</div>
-                            </a>
+                            </Link>
                           </li>
                           <li>
                             <i className="icon-chevron-right"></i>
                           </li>
                           <li>
-                            <a href="#">
-                              <div className="text-tiny">Ecommerce</div>
-                            </a>
+                            <Link to={PATHS.PRODUCTLIST}>
+                              <div className="text-tiny">Product List</div>
+                            </Link>
                           </li>
                           <li>
                             <i className="icon-chevron-right"></i>
@@ -209,12 +221,12 @@ export default function ProductList() {
                               </div>
                             </form>
                           </div>
-                          <a
+                          <Link
                             className="tf-button style-1 w208"
-                            href="add-product.html"
+                            to={PATHS.ADDPRODUCT}
                           >
                             <i className="icon-plus"></i>Add new
-                          </a>
+                          </Link>
                         </div>
                         <div className="wg-table table-product-list">
                           <ul className="table-title flex gap20 mb-14">
@@ -404,9 +416,17 @@ export default function ProductList() {
                                         <div className="item eye">
                                           <i className="icon-eye"></i>
                                         </div>
-                                        <div className="item edit">
-                                          <i className="icon-edit-3"></i>
-                                        </div>
+
+                                        <Link
+                                          to={{
+                                            pathname: `/sc-dashboard/product/edit-product/${product.slug}`,
+                                          }}
+                                        >
+                                          <div className="item edit">
+                                            <i className="icon-edit-3"></i>
+                                          </div>
+                                        </Link>
+
                                         <div className="item trash">
                                           <i
                                             onClick={(e) => {
@@ -435,19 +455,21 @@ export default function ProductList() {
                           <div className="text-tiny">
                             {pagination.current_page} of {pagination.last_page}
                           </div>
+
                           <ul className="wg-pagination">
                             <li>
                               <a
                                 onClick={() =>
-                                  fetchBrands(pagination.current_page - 1)
+                                  pagination.current_page > 1 &&
+                                  fetchProductList(pagination.current_page - 1)
                                 }
-                                disabled={pagination.current_page === 1}
                               >
                                 <i className="icon-chevron-left" />
                               </a>
                             </li>
+
                             {Array.from(
-                              { length: pagination.last_page },
+                              { length: pagination.last_page || 1 }, // prevent undefined error
                               (_, i) => i + 1
                             ).map((page) => (
                               <li
@@ -458,17 +480,18 @@ export default function ProductList() {
                                     : ""
                                 }
                               >
-                                <a onClick={() => fetchBrands(page)}>{page}</a>
+                                <a onClick={() => fetchProductList(page)}>
+                                  {page}
+                                </a>
                               </li>
                             ))}
+
                             <li>
                               <a
                                 onClick={() =>
-                                  fetchBrands(pagination.current_page + 1)
-                                }
-                                disabled={
-                                  pagination.current_page ===
-                                  pagination.last_page
+                                  pagination.current_page <
+                                    pagination.last_page &&
+                                  fetchProductList(pagination.current_page + 1)
                                 }
                               >
                                 <i className="icon-chevron-right" />

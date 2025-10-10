@@ -1,0 +1,30 @@
+// src/data/socialIcons.js
+const socialIcons = [
+  "fa-brands fa-facebook",
+  "fa-brands fa-twitter",
+  "fa-brands fa-instagram",
+  "fa-brands fa-linkedin",
+  "fa-brands fa-youtube",
+  "fa-brands fa-tiktok",
+  "fa-brands fa-whatsapp",
+  "fa-brands fa-telegram",
+  "fa-brands fa-snapchat",
+  "fa-brands fa-pinterest",
+  "fa-brands fa-reddit",
+  "fa-brands fa-discord",
+  "fa-brands fa-github",
+  "fa-brands fa-gitlab",
+  "fa-brands fa-slack",
+  "fa-brands fa-skype",
+  "fa-brands fa-vimeo",
+  "fa-brands fa-dribbble",
+  "fa-brands fa-behance",
+  "fa-brands fa-medium",
+  "fa-brands fa-tumblr",
+  "fa-brands fa-flickr",
+  "fa-brands fa-quora",
+  "fa-brands fa-spotify",
+  "fa-brands fa-soundcloud",
+];
+
+export default socialIcons;

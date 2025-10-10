@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 
 export default function GetDiscount({formData, handleChange, errors}) {
   const [discountOptions, setDiscountOptions] = useState([]);
+  const apiBase = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchDiscounts = async () => {
       try {
-        const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
         const response = await fetch(`${apiBase}/api/get-discount`, {
           credentials: "include",
         });

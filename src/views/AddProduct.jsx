@@ -1,32 +1,17 @@
 import AddProductForm from "../components/AddProductForm";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import EditProductForm from "../components/product/EditProductForm";
 import Sidebar from "../components/Sidebar";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { PATHS } from "../router";
 
 export default function AddProduct() {
+  const { slug } = useParams();
   return (
     <>
-      <meta charSet="utf-8"></meta>
       <title>Add Product - Sika's Clothing</title>
-
-      <meta name="author" content="themesflat.com"></meta>
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1"
-      ></meta>
-      <link rel="stylesheet" type="text/css" href="css/animate.min.css"></link>
-      <link rel="stylesheet" type="text/css" href="css/animation.css"></link>
-      <link rel="stylesheet" type="text/css" href="css/bootstrap.css"></link>
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="css/bootstrap-select.min.css"
-      ></link>
-      <link rel="stylesheet" type="text/css" href="css/style.css"></link>
-      <link rel="stylesheet" href="font/fonts.css"></link>
-      <link rel="stylesheet" href="icon/style.css"></link>
-      <link rel="shortcut icon" href="images/favicon.png"></link>
-      <link rel="apple-touch-icon-precomposed" href="images/favicon.png"></link>
 
       <div className="body">
         <div id="wrapper">
@@ -39,30 +24,34 @@ export default function AddProduct() {
                   <div className="main-content-inner">
                     <div className="main-content-wrap">
                       <div className="flex items-center flex-wrap justify-between gap20 mb-27">
-                        <h3>Add Product</h3>
+                        {slug ? <h3>Edit Product</h3> : <h3>Add Product</h3>}
                         <ul className="breadcrumbs flex items-center flex-wrap justify-start gap10">
                           <li>
-                            <a href="index.html">
+                            <Link to={PATHS.ADMIN}>
                               <div className="text-tiny">Dashboard</div>
-                            </a>
+                            </Link>
                           </li>
                           <li>
                             <i className="icon-chevron-right"></i>
                           </li>
                           <li>
-                            <a href="#">
-                              <div className="text-tiny">Ecommerce</div>
-                            </a>
+                            <Link to={PATHS.PRODUCTLIST}>
+                              <div className="text-tiny">Product List</div>
+                            </Link>
                           </li>
                           <li>
                             <i className="icon-chevron-right"></i>
                           </li>
                           <li>
-                            <div className="text-tiny">Add product</div>
+                            {slug ? (
+                              <div className="text-tiny">Edit product</div>
+                            ) : (
+                              <div className="text-tiny">Add product</div>
+                            )}
                           </li>
                         </ul>
                       </div>
-                      <AddProductForm></AddProductForm>
+                      {slug ? <EditProductForm /> : <AddProductForm />}
                     </div>
                   </div>
                   <Footer></Footer>

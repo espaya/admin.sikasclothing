@@ -7,6 +7,8 @@ import Cookies from "js-cookie";
 export default function TaxLists() {
   const apiBase = import.meta.env.VITE_API_URL;
   const [loading, setLoading] = useState(false);
+
+  const csrfToken = Cookies.get("XSRF-TOKEN");
   const [taxData, setTaxData] = useState({
     data: [],
     current_page: 1,
@@ -21,10 +23,6 @@ export default function TaxLists() {
     setErrors({});
 
     try {
-      await fetch(`${apiBase}/sanctum/csrf-cookie`, {
-        credentials: "include",
-      });
-      const csrfToken = Cookies.get("XSRF-TOKEN");
       const response = await fetch(`${apiBase}/api/tax-rates?page=${page}`, {
         method: "GET",
         credentials: "include",
@@ -249,9 +247,7 @@ export default function TaxLists() {
                               taxData.current_page === 1 ? "active" : ""
                             }
                           >
-                            <a onClick={() => handlePageChange(1)}>
-                              1
-                            </a>
+                            <a onClick={() => handlePageChange(1)}>1</a>
                           </li>
 
                           {/* Show second page if not active and not adjacent to first */}

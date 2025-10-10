@@ -31,6 +31,9 @@ import AllPosts from "./views/AllPosts.jsx";
 import CreatePost from "./views/CreatePost.jsx";
 import PostCategory from "./views/PostCategory.jsx";
 import CreatePostCategory from "./views/CreatePostCategory.jsx";
+import Comments from "./views/Comments.jsx";
+import Contacts from "./views/Contacts.jsx";
+import EditProduct from "./views/Editproduct.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
@@ -60,6 +63,15 @@ export const ROUTE_CONFIG = {
     isProtected: true,
     roles: ["ADMIN"],
   },
+
+    EDIT_PRODUCT: {
+    path: "/sc-dashboard/product/edit-product/:slug",
+    element: <AddProduct />,
+    name: "Edit Product",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
   PRODUCTLIST: {
     path: "/sc-dashboard/products",
     element: <ProductList />,
@@ -253,13 +265,28 @@ export const ROUTE_CONFIG = {
     roles: ["ADMIN"],
   },
 
+  POST_COMMENTS: {
+    path: "/sc-dashboard/blog/comments",
+    element: <Comments />,
+    name: "Comments",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
 
-    NOT_FOUND: {
-      path: "*",
-      element: <NotFound />,
-      name: "Not Found",
-      isProtected: false,
-    },
+  CONTACTS: {
+    path: "/sc-dashboard/contacts",
+    element: <Contacts />,
+    name: "Contacts",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+  NOT_FOUND: {
+    path: "*",
+    element: <NotFound />,
+    name: "Not Found",
+    isProtected: false,
+  },
 };
 
 // Helper functions for route access

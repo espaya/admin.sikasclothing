@@ -3,166 +3,10 @@ import { useState } from "react";
 import GetDiscount from "./GetDiscount";
 import GetCategory from "./GetCategory";
 import BrandOptions from "./BrandOptins";
+import sizeOptions from "./product/sizeOptins";
+import fitTypes from "./product/fitTypes";
 
 export default function AddProductForm() {
-  const sizeOptions = [
-    // Standard sizes
-    "XXS",
-    "XS",
-    "S",
-    "M",
-    "L",
-    "XL",
-    "XXL",
-    "3XL",
-    "4XL",
-    "5XL",
-    "6XL",
-
-    // Petite sizes
-    "P-XS",
-    "P-S",
-    "P-M",
-    "P-L",
-    "P-XL",
-
-    // Tall sizes
-    "T-XS",
-    "T-S",
-    "T-M",
-    "T-L",
-    "T-XL",
-    "T-XXL",
-
-    // Plus sizes
-    "0X",
-    "1X",
-    "2X",
-    "3X",
-    "4X",
-
-    // Numeric sizes (common for pants/dresses)
-    "28",
-    "30",
-    "32",
-    "34",
-    "36",
-    "38",
-    "40",
-    "42",
-    "44",
-    "46",
-    "48",
-
-    // Alpha-numeric combinations
-    "XS/S",
-    "M/L",
-    "L/XL",
-
-    // Standardized sizing
-    "One Size",
-    "OSFA",
-
-    // Age-based sizing
-    "Newborn",
-    "3-6M",
-    "6-12M",
-    "12-18M",
-    "18-24M",
-    "2T",
-    "3T",
-    "4T",
-    "5T",
-
-    // European sizes
-    "EU 32",
-    "EU 34",
-    "EU 36",
-    "EU 38",
-    "EU 40",
-    "EU 42",
-    "EU 44",
-    "EU 46",
-    "EU 48",
-
-    // UK sizes
-    "UK 4",
-    "UK 6",
-    "UK 8",
-    "UK 10",
-    "UK 12",
-    "UK 14",
-    "UK 16",
-    "UK 18",
-    "UK 20",
-
-    // Asian sizes
-    "Asian S",
-    "Asian M",
-    "Asian L",
-
-    // Custom options
-    "Made-to-Measure",
-    "Bespoke",
-    "Custom",
-  ];
-
-  const fitTypes = [
-    // Basic fits
-    "Regular Fit",
-    "Slim Fit",
-    "Loose Fit",
-    "Relaxed Fit",
-    "Tailored Fit",
-    "Skinny Fit",
-    "Oversized Fit",
-
-    // Women-specific fits
-    "Fitted",
-    "Bodycon",
-    "A-Line",
-    "Empire Waist",
-    "Peplum",
-    "Sheath",
-    "Shift",
-
-    // Men-specific fits
-    "Classic Fit",
-    "Modern Fit",
-    "Athletic Fit",
-    "Muscle Fit",
-    "Comfort Fit",
-
-    // Jeans/Pants fits
-    "Straight Leg",
-    "Bootcut",
-    "Flared",
-    "Wide Leg",
-    "Tapered",
-    "Cropped",
-    "Cigarette",
-    "Mom Fit",
-    "Dad Fit",
-
-    // Specialized fits
-    "Asymmetrical",
-    "Draped",
-    "Drop Shoulder",
-    "Boxy",
-    "High Waisted",
-    "Low Waisted",
-    "Mid Rise",
-
-    // Custom/other
-    "Made-to-Measure",
-    "Unisex Fit",
-    "Maternity Fit",
-    "Petite Fit",
-    "Tall Fit",
-    "Plus Size Fit",
-    "custom",
-  ];
-
   const [formData, setFormData] = useState({
     product_name: "",
     category: [],
@@ -191,10 +35,10 @@ export default function AddProductForm() {
     storage: "",
     display_in_hero: false,
   });
-
   const [tagInput, setTagInput] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const apiBase = import.meta.env.VITE_API_URL;
 
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -279,21 +123,9 @@ export default function AddProductForm() {
     setErrors({});
 
     try {
-      const apiBase = import.meta.env.VITE_API_URL;
-
-      const csrfResponse = await fetch(`${apiBase}/sanctum/csrf-cookie`, {
+      await fetch(`${apiBase}/sanctum/csrf-cookie`, {
         credentials: "include",
       });
-
-      const csrfToken = Cookies.get("XSRF-TOKEN");
-
-      if (!csrfResponse.ok) {
-        throw new Error("Failed to fetch CSRF token");
-      }
-
-      if (!csrfToken) {
-        throw new Error("CSRF token not found");
-      }
 
       const form = new FormData();
 
@@ -323,54 +155,51 @@ export default function AddProductForm() {
       const response = await fetch(`${apiBase}/api/add-product`, {
         method: "POST",
         headers: {
-          "X-XSRF-TOKEN": decodeURIComponent(csrfToken),
+          "X-XSRF-TOKEN": decodeURIComponent(Cookies.get("XSRF-TOKEN")),
           Accept: "application/json",
         },
         credentials: "include",
         body: form,
       });
 
-      console.log(response);
-
       const data = await response.json();
 
       if (!response.ok) {
-        if (data.errors) setErrors(data.errors);
-        else setErrors({ general: data.message || "An error occurred" });
-      } else {
-        setFormData({
-          product_name: "",
-          category: [],
-          tags: [],
-          gender: "",
-          brand: "",
-          custom_brand: "",
-          description: "",
-          price: "",
-          sale_price: "",
-          stock_quantity: "",
-          stock_status: "",
-          status: "",
-          colors: ["#ffffff"],
-          material: "",
-          fit_type: [],
-          custom_fit_type: [],
-          size: [],
-          custom_size: [],
-          gallery: [],
-          featured: "",
-          discount: "",
-          barcode: "",
-          weight: "",
-          dimensions: "",
-          storage: "",
-        });
-        setSuccessMessage(data.message);
-        setTimeout(() => setSuccessMessage(""), 3500);
+        setErrors(data.errors || { general: data.message });
+        return;
       }
+
+      setFormData({
+        product_name: "",
+        category: [],
+        tags: [],
+        gender: "",
+        brand: "",
+        custom_brand: "",
+        description: "",
+        price: "",
+        sale_price: "",
+        stock_quantity: "",
+        stock_status: "",
+        status: "",
+        colors: ["#ffffff"],
+        material: "",
+        fit_type: [],
+        custom_fit_type: [],
+        size: [],
+        custom_size: [],
+        gallery: [],
+        featured: "",
+        discount: "",
+        barcode: "",
+        weight: "",
+        dimensions: "",
+        storage: "",
+      });
+      setSuccessMessage(data.message);
+      setTimeout(() => setSuccessMessage(""), 3500);
     } catch (err) {
       setErrors({ general: err.message });
-      console.log(err);
       setTimeout(() => setErrors({}), 3500);
     } finally {
       setLoading(false);

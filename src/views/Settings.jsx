@@ -6,6 +6,7 @@ import General from "../components/settings/General";
 import Payment from "../components/settings/Payment";
 import Shipping from "../components/settings/Shipping";
 import TaxRate from "../components/settings/TaxRate";
+import SocialMedia from "../components/settings/SocialMedia";
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("general"); // Track active tab
@@ -14,12 +15,6 @@ export default function Settings() {
 
   return (
     <>
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="assets/css/animate.min.css"
-      />
-      <link rel="stylesheet" type="text/css" href="assets/css/animation.css" />
       <div className="body">
         <div id="wrapper">
           <div id="page" className="">
@@ -97,6 +92,16 @@ export default function Settings() {
                                     <span className="h6">Tax</span>
                                   </span>
                                 </li>
+                                <li
+                                  className={`item-title ${
+                                    activeTab === "social-media" ? "active" : ""
+                                  }`}
+                                  onClick={() => setActiveTab("social-media")}
+                                >
+                                  <span className="inner">
+                                    <span className="h6">Social Media</span>
+                                  </span>
+                                </li>
                               </ul>
                               <div className="widget-content-tab">
                                 <div
@@ -152,6 +157,21 @@ export default function Settings() {
                                   }}
                                 >
                                   <TaxRate
+                                    errors={errors}
+                                    setErrors={setErrors}
+                                    setSuccessMsg={setSuccessMsg}
+                                  />
+                                </div>
+                                <div
+                                  className={`widget-content-inner ${
+                                    activeTab === "social-media" ? "active" : ""
+                                  }`}
+                                  style={{
+                                    display:
+                                      activeTab === "social-media" ? "block" : "none",
+                                  }}
+                                >
+                                  <SocialMedia
                                     errors={errors}
                                     setErrors={setErrors}
                                     setSuccessMsg={setSuccessMsg}
