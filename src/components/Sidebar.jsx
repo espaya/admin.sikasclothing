@@ -11,19 +11,21 @@ export default function Sidebar() {
 
   const [collapsed, setCollapsed] = useState(false);
 
+
   return (
     <div className={`section-menu-left ${collapsed ? "collapsed" : ""}`}>
       <div className="box-logo">
-        <a href="#" id="site-logo-inner">
+        <Link to={PATHS.ADMIN} href="#" id="site-logo-inner">
           <img
             className=""
             id="logo_header"
             alt=""
-            src="/assets/images/logo/logo.png"
-            data-light="/assets/images/logo/logo.png"
-            data-dark="/assets/images/logo/logo-dark.png"
+            src="/assets/images/logo.png"
+            data-light="/assets/images/logo.png"
+            data-dark="/assets/images/logo.png"
+            style={{width: "150px"}}
           ></img>
-        </a>
+        </Link>
         <div
           className="button-show-hide"
           onClick={() => setCollapsed((prev) => !prev)}

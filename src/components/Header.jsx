@@ -1,40 +1,38 @@
 import { useContext } from "react";
 import { AuthContext } from "../auth/AuthContext";
 import useLogout from "../auth/Logout";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import PATHS from "../router"
 
 export default function Header() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const logout = useLogout();
 
+
   return (
     <div className="header-dashboard">
       <div className="wrap">
         <div className="header-left">
-          <a href="index.html">
+          <Link to={PATHS.ADMIN} >
             <img
               className=""
               id="logo_header_mobile"
               alt=""
-              src="/assets/images/logo/logo.png"
-              data-light="/assets/images/logo/logo.png"
-              data-dark="/assets/images/logo/logo-dark.png"
+              src="/assets/images/logo.png" style={{width: "180px"}}
+              data-light="/assets/images/logo.png"
+              data-dark="/assets/images/logo.png"
               data-width="154px"
               data-height="52px"
-              data-retina="/assets/images/logo/logo@2x.png"
+              data-retina="/assets/images/logo.png"
             ></img>
-          </a>
+          </Link>
           <div className="button-show-hide">
             <i className="icon-menu-left"></i>
           </div>
         </div>
         <div className="header-grid">
 
-
-          <div className="header-item button-dark-light">
-            <i className="icon-moon"></i>
-          </div>
           <div className="popup-wrap noti type-header">
             <div className="dropdown">
               <button
@@ -216,11 +214,6 @@ export default function Header() {
                   </a>
                 </li>
               </ul>
-            </div>
-          </div>
-          <div className="header-item button-zoom-maximize">
-            <div className="">
-              <i className="icon-maximize"></i>
             </div>
           </div>
           <div className="popup-wrap apps type-header">

@@ -290,80 +290,125 @@ export default function ProductList() {
                                         </a>
                                       </div>
                                       <div className="flex items-center gap-2">
-                                        {(typeof product.color === "string"
-                                          ? product.color.split(",")
-                                          : Array.isArray(product.color)
-                                          ? product.color
-                                          : [product.color]
-                                        ).map((rawColor, index) => {
-                                          // Clean and normalize the color string
-                                          const color = rawColor
-                                            .replace(/["']/g, "")
-                                            .trim();
+                                        {(() => {
+                                          let colors = [];
 
-                                          // Regex checks for color formats
-                                          const isHex = (c) =>
-                                            /^#([0-9A-F]{3}){1,2}$/i.test(c);
-
-                                          const isRgb = (c) =>
-                                            /^rgba?\(\s*(\d{1,3}\s*,){2,3}\s*[\d.]+\s*\)$/i.test(
-                                              c
-                                            );
-
-                                          const isHsl = (c) =>
-                                            /^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%(\s*,\s*[\d.]+\s*)?\)$/i.test(
-                                              c
-                                            );
-
-                                          // Also validate using browser's color parser
-                                          const isValidCssColor = (c) => {
-                                            const s = new Option().style;
-                                            s.color = "";
-                                            s.color = c;
-                                            return s.color !== "";
-                                          };
-
-                                          // Decide final color
-                                          let finalColor = "#ccc"; // default fallback
-
-                                          if (
-                                            isHex(color) ||
-                                            isRgb(color) ||
-                                            isHsl(color)
+                                          // Normalize color input into an array
+                                          if (Array.isArray(product.color)) {
+                                            colors = product.color;
+                                          } else if (
+                                            typeof product.color === "string"
                                           ) {
-                                            finalColor = color;
-                                          } else if (isValidCssColor(color)) {
-                                            // covers named colors like 'red', 'blue', etc.
-                                            finalColor = color;
+                                            const trimmed =
+                                              product.color.trim();
+
+                                            // Try parsing JSON array like '["#fff", "#000"]'
+                                            if (
+                                              trimmed.startsWith("[") &&
+                                              trimmed.endsWith("]")
+                                            ) {
+                                              try {
+                                                const parsed =
+                                                  JSON.parse(trimmed);
+                                                if (Array.isArray(parsed)) {
+                                                  colors = parsed;
+                                                } else {
+                                                  colors = [trimmed];
+                                                }
+                                              } catch {
+                                                // fallback if JSON parsing fails
+                                                colors = trimmed.includes(",")
+                                                  ? trimmed.split(",")
+                                                  : [trimmed];
+                                              }
+                                            } else {
+                                              // fallback for comma-separated or single string
+                                              colors = trimmed.includes(",")
+                                                ? trimmed.split(",")
+                                                : [trimmed];
+                                            }
                                           }
 
-                                          return (
-                                            <div
-                                              key={index}
-                                              style={{
-                                                backgroundColor: finalColor,
-                                                width: "16px",
-                                                height: "16px",
-                                                borderRadius: "50%",
-                                                display: "inline-block",
-                                                marginRight: "5px",
-                                                border: "1px solid #999",
-                                              }}
-                                              title={color}
-                                            />
+                                          // Validate and display color bubbles
+                                          return colors.map(
+                                            (rawColor, index) => {
+                                              const color = rawColor
+                                                .replace(/["'\[\]]/g, "")
+                                                .trim();
+
+                                              const isHex = (c) =>
+                                                /^#([0-9A-F]{3}){1,2}$/i.test(
+                                                  c
+                                                );
+                                              const isRgb = (c) =>
+                                                /^rgba?\(\s*(\d{1,3}\s*,){2,3}\s*[\d.]+\s*\)$/i.test(
+                                                  c
+                                                );
+                                              const isHsl = (c) =>
+                                                /^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%(\s*,\s*[\d.]+\s*)?\)$/i.test(
+                                                  c
+                                                );
+
+                                              const isValidCssColor = (c) => {
+                                                const s = new Option().style;
+                                                s.color = "";
+                                                s.color = c;
+                                                return s.color !== "";
+                                              };
+
+                                              let finalColor = "#ccc";
+                                              if (
+                                                isHex(color) ||
+                                                isRgb(color) ||
+                                                isHsl(color) ||
+                                                isValidCssColor(color)
+                                              ) {
+                                                finalColor = color;
+                                              }
+
+                                              return (
+                                                <div
+                                                  key={index}
+                                                  style={{
+                                                    backgroundColor: finalColor,
+                                                    width: "16px",
+                                                    height: "16px",
+                                                    borderRadius: "50%",
+                                                    display: "inline-block",
+                                                    marginRight: "5px",
+                                                    border: "1px solid #999",
+                                                  }}
+                                                  title={color}
+                                                />
+                                              );
+                                            }
                                           );
-                                        })}
+                                        })()}
 
                                         <span className="body-text">
-                                          {Array.isArray(product.color)
-                                            ? product.color.length === 1
-                                              ? product.color[0].trim()
-                                              : null
-                                            : typeof product.color === "string"
-                                            ? product.color.includes(",")
-                                              ? null
-                                              : product.color.trim()
-                                            : null}
+                                          {(() => {
+                                            const colors =
+                                              Array.isArray(product.color) ||
+                                              typeof product.color === "string"
+                                                ? JSON.parse(
+                                                    JSON.stringify(
+                                                      product.color
+                                                    )
+                                                  )
+                                                : [];
+                                            if (
+                                              Array.isArray(colors) &&
+                                              colors.length === 1
+                                            )
+                                              return colors[0];
+                                            if (
+                                              typeof product.color ===
+                                                "string" &&
+                                              !product.color.includes(",")
+                                            )
+                                              return product.color.trim();
+                                            return null;
+                                          })()}
                                         </span>
                                       </div>
 

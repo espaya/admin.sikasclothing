@@ -1,12 +1,13 @@
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import GetDiscount from "../../components/GetDiscount";
-import GetCategory from "../../components/GetCategory";
-import BrandOptions from "../../components/BrandOptins";
-import sizeOptions from "./sizeOptins";
-import fitTypes from "./fitTypes";
+import GetDiscount from "../GetDiscount";
+import GetCategory from "../GetCategory";
+import BrandOptions from "../BrandOptins";
+import sizeOptions from "../product/sizeOptins";
+import fitTypes from "../product/fitTypes";
 import getSingleProduct from "../../controllers/GetSingleProduct";
 import { useParams } from "react-router-dom";
+import EditGallery from "./EditGallery";
 
 export default function EditProductForm() {
   const { slug } = useParams();
@@ -14,7 +15,6 @@ export default function EditProductForm() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const apiBase = import.meta.env.VITE_API_URL;
-  const [product, setProduct] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [formData, setFormData] = useState({
     product_name: "",
@@ -45,9 +45,46 @@ export default function EditProductForm() {
     display_in_hero: false,
   });
 
+  const [product, setProduct] = useState([]);
+
   useEffect(() => {
     getSingleProduct(slug, setLoading, setErrors, setProduct, apiBase);
   }, []);
+
+  useEffect(() => {
+    if (product && Object.keys(product).length > 0) {
+      setFormData({
+        product_name: product.product_name || "",
+        category: product.categories?.map((c) => c.id.toString()) || [],
+        tags: product.tags?.map((t) => t.name) || [],
+        gender: product.gender || "",
+        brand: product.brand || "",
+        custom_brand: product.custom_brand || "",
+        description: product.description || "",
+        price: product.price || "",
+        sale_price: product.sale_price || "",
+        stock_quantity: product.stock_quantity || "",
+        stock_status: product.stock_status || "",
+        status: product.status || "",
+        colors: product.color ? JSON.parse(product.color) : ["#ffffff"],
+        material: product.material || "",
+        fit_type: product.fit_type ? JSON.parse(product.fit_type) : [],
+        custom_fit_type: [],
+        size: product.size ? JSON.parse(product.size) : [],
+        custom_size: [],
+        gallery: product.gallery
+          ? product.gallery.split(",").map((img) => img.trim())
+          : [],
+        featured: product.featured === "true",
+        discount: product.discount || "",
+        barcode: product.barcode || "",
+        weight: product.weight || "",
+        dimensions: product.dimensions || "",
+        storage: product.storage || "",
+        display_in_hero: product.display_in_hero === "true",
+      });
+    }
+  }, [product]);
 
   const handleTagKeyDown = (e) => {
     if (e.key === "Enter" && tagInput.trim() !== "") {
@@ -176,35 +213,8 @@ export default function EditProductForm() {
         return;
       }
 
-      setFormData({
-        product_name: "",
-        category: [],
-        tags: [],
-        gender: "",
-        brand: "",
-        custom_brand: "",
-        description: "",
-        price: "",
-        sale_price: "",
-        stock_quantity: "",
-        stock_status: "",
-        status: "",
-        colors: ["#ffffff"],
-        material: "",
-        fit_type: [],
-        custom_fit_type: [],
-        size: [],
-        custom_size: [],
-        gallery: [],
-        featured: "",
-        discount: "",
-        barcode: "",
-        weight: "",
-        dimensions: "",
-        storage: "",
-      });
       setSuccessMessage(data.message);
-      setTimeout(() => setSuccessMessage(""), 3500);
+      setTimeout(() => setSuccessMessage(""), 4000);
     } catch (err) {
       setErrors({ general: err.message });
       setTimeout(() => setErrors({}), 3500);
@@ -349,7 +359,7 @@ export default function EditProductForm() {
             )}
           </fieldset>
 
-          <hr></hr>
+          <hr />
 
           <div className="gap22 cols">
             <fieldset className="name">
@@ -479,64 +489,15 @@ export default function EditProductForm() {
         <div className="wg-box">
           <fieldset>
             <div className="body-title mb-10">Upload images</div>
-            <div
-              className="upload-image mb-16"
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-            >
-              {formData.gallery.map((file, index) => (
-                <div
-                  className="item"
-                  key={index}
-                  style={{ position: "relative" }}
-                >
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt={`Preview ${index}`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveImage(index)}
-                    style={{
-                      position: "absolute",
-                      top: "5px",
-                      right: "5px",
-                      // background: "#fff",
-                      border: "none",
-                      borderRadius: "50%",
-                      cursor: "pointer",
-                      fontWeight: "bold",
-                      color: "red",
-                      width: "24px",
-                      height: "24px",
-                    }}
-                    title="Remove image"
-                  >
-                    ✖
-                  </button>
-                </div>
-              ))}
 
-              <div className="item up-load">
-                <label className="uploadfile" htmlFor="myFile">
-                  <span className="icon">
-                    <i className="icon-upload-cloud"></i>
-                  </span>
-                  <span className="text-tiny">
-                    Drop your images here or select{" "}
-                    <span className="tf-color">click to browse</span>
-                  </span>
-                  <input
-                    type="file"
-                    id="myFile"
-                    name="gallery"
-                    onChange={handleChange}
-                    multiple
-                    accept="image/*"
-                  />
-                </label>
-              </div>
-            </div>
+            <EditGallery
+              handleDrop={handleDrop}
+              handleDragOver={handleDragOver}
+              formData={formData}
+              handleChange={handleChange}
+              handleRemoveImage={handleRemoveImage}
+              apiBase={apiBase}
+            />
 
             <div className="body-text">
               You need to add at least 4 images. Pay attention to the quality of
@@ -544,9 +505,13 @@ export default function EditProductForm() {
               Pictures must be in certain dimensions. Notice that the product
               shows all the details
             </div>
-            {errors.gallery && (
-              <div className="text-tiny text-danger">{errors.gallery[0]}</div>
-            )}
+            {Object.keys(errors)
+              .filter((key) => key.startsWith("gallery"))
+              .map((key, index) => (
+                <div key={index} className="text-tiny text-danger">
+                  {errors[key][0]}
+                </div>
+              ))}
           </fieldset>
           <div className="cols gap22">
             <fieldset className="name">
@@ -938,7 +903,7 @@ export default function EditProductForm() {
               type="submit"
               disabled={loading}
             >
-              {loading ? "Saving Product..." : "Add product"}
+              {loading ? "Updating Product..." : "Update Product"}
             </button>
           </div>
         </div>

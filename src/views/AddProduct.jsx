@@ -1,7 +1,7 @@
 import AddProductForm from "../components/AddProductForm";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import EditProductForm from "../components/product/EditProductForm";
+import EditProductForm from "../components/edit_product/EditProductForm";
 import Sidebar from "../components/Sidebar";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -11,7 +11,7 @@ export default function AddProduct() {
   const { slug } = useParams();
   return (
     <>
-      <title>Add Product - Sika's Clothing</title>
+      <title>{slug ? "Edit Product" : "Add Product"} - Sika's Clothing</title>
 
       <div className="body">
         <div id="wrapper">
