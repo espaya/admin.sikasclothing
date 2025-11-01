@@ -34,6 +34,7 @@ import CreatePostCategory from "./views/CreatePostCategory.jsx";
 import Comments from "./views/Comments.jsx";
 import Contacts from "./views/Contacts.jsx";
 import EditProduct from "./views/Editproduct.jsx";
+import AddCategoryForm from "./components/AddCategoryForm.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
@@ -64,7 +65,7 @@ export const ROUTE_CONFIG = {
     roles: ["ADMIN"],
   },
 
-    EDIT_PRODUCT: {
+  EDIT_PRODUCT: {
     path: "/sc-dashboard/product/edit-product/:slug",
     element: <AddProduct />,
     name: "Edit Product",
@@ -90,6 +91,13 @@ export const ROUTE_CONFIG = {
     path: "/sc-dashboard/product/add-category",
     element: <AddCateogry />,
     name: "Add Category",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+  EDITCATEGORY: {
+    path: "/sc-dashboard/product/edit-category/:slug",
+    element: <AddCateogry />,
+    name: "Edit Category",
     isProtected: true,
     roles: ["ADMIN"],
   },

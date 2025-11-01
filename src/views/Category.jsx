@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import { PATHS } from "../router";
+import { Link } from "react-router-dom";
 
 export default function Category() {
   const [categories, setCategories] = useState([]);
@@ -196,9 +198,14 @@ export default function Category() {
                                       <div className="item eye">
                                         <i className="icon-eye"></i>
                                       </div>
-                                      <div className="item edit">
-                                        <i className="icon-edit-3"></i>
-                                      </div>
+
+                                      <Link
+                                        to={`/sc-dashboard/product/edit-category/${category.slug}`}
+                                      >
+                                        <div className="item edit">
+                                          <i className="icon-edit-3"></i>
+                                        </div>
+                                      </Link>
                                       {category.slug === "general" ? (
                                         ""
                                       ) : (

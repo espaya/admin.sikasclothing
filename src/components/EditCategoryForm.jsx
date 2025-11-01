@@ -1,19 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Cookies from "js-cookie";
-import { useCallback } from "react";
+import getSingleCategory from "../controllers/GetSingleCategory";
+import { useParams } from "react-router-dom";
 
-export default function AddCategoryForm() {
-  
+export default function EditCategoryForm() {
+  const { slug } = useParams();
+  const [category, setCategory] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     status: "",
     is_featured: false,
-    image: null,
+    image: null, // can be file or string (existing filename)
     parent_id: "",
   });
 
-  const [preview, setPreview] = useState(null); // preview image
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const apiBase = import.meta.env.VITE_API_URL;
+
   const parentCategories = [
     { id: 1, name: "Men's Clothing" },
     { id: 2, name: "Women's Clothing" },
@@ -21,14 +29,9 @@ export default function AddCategoryForm() {
     { id: 4, name: "Home & Garden" },
   ];
 
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
-  const apiBase = import.meta.env.VITE_API_URL;
-
+  // Handle field changes
   const handleChange = (e) => {
     const { name, type, checked, value, files } = e.target;
-
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -40,6 +43,7 @@ export default function AddCategoryForm() {
     }
   };
 
+  // Handle drag & drop
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file) {
@@ -48,6 +52,7 @@ export default function AddCategoryForm() {
     }
   }, []);
 
+  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -58,10 +63,12 @@ export default function AddCategoryForm() {
 
       const formPayload = new FormData();
       for (const key in formData) {
+        // Only append image if it's a File (not a string)
+        if (key === "image" && typeof formData.image === "string") continue;
         formPayload.append(key, formData[key]);
       }
 
-      const response = await fetch(`${apiBase}/api/add-category`, {
+      const response = await fetch(`${apiBase}/api/update-category/${slug}`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -72,44 +79,59 @@ export default function AddCategoryForm() {
       });
 
       const data = await response.json();
-      console.log("Response:", data);
 
       if (!response.ok) {
-        setErrors(data.errors || { general: data.message || "Error" });
+        setErrors(data.errors || { general: data.message || "Error occurred" });
       } else {
-        setFormData({
-          name: "",
-          description: "",
-          status: "",
-          is_featured: false,
-          image: null,
-          parent_id: "",
-        });
-        setPreview(null);
-        setSuccessMessage(data.message);
+        setSuccessMessage(data.message || "Category updated successfully");
         setTimeout(() => setSuccessMessage(""), 3500);
       }
     } catch (err) {
       setErrors({ general: err.message });
-      setTimeout(() => setErrors({ general: "" }), 3500);
     } finally {
       setLoading(false);
     }
   };
 
+  // Fetch category details
+  useEffect(() => {
+    getSingleCategory(setLoading, setErrors, apiBase, setCategory, slug);
+  }, [slug]);
+
+  // Apply category data to form when loaded
+  useEffect(() => {
+    if (category) {
+      setFormData({
+        name: category.name || "",
+        description: category.description || "",
+        status: category.status || "",
+        is_featured:
+          category.is_featured === 1 || category.is_featured === true,
+        image: category.image || null,
+        parent_id: category.parent_id || "",
+      });
+
+      // Set preview to existing image URL if present
+      if (category.image) {
+        setPreview(`${apiBase}/storage/${category.image}`);
+      }
+    }
+  }, [category]);
+
   return (
     <div className="wg-box">
       {errors.general && (
-        <p id="error-message" className="text-danger md-5">
-          {" "}
-          {errors.general}{" "}
+        <p id="error-message" className="text-danger mb-5">
+          {errors.general}
         </p>
       )}
       {successMessage && (
-        <p className="alert alert-success"> {successMessage} </p>
+        <p className="alert alert-success">{successMessage}</p>
       )}
+
       <form onSubmit={handleSubmit} className="tf-section-2 form-add-product">
         <div className="wg-box">
+          {/* Category Name */}
           <fieldset className="name">
             <div className="body-title mb-10">
               Category name <span className="tf-color-1">*</span>
@@ -119,19 +141,17 @@ export default function AddCategoryForm() {
               type="text"
               placeholder="Category name"
               name="name"
-              tabIndex={0}
               value={formData.name}
               onChange={handleChange}
-              aria-required="true"
               autoComplete="off"
-            ></input>
+              required
+            />
             {errors.name && (
-              <div className="text-tiny text-danger mt-4">
-                {" "}
-                {errors.name[0]}{" "}
-              </div>
+              <div className="text-tiny text-danger mt-4">{errors.name[0]}</div>
             )}
           </fieldset>
+
+          {/* Status + Parent Category */}
           <div className="gap22 cols">
             <fieldset className="category">
               <div className="body-title mb-10">
@@ -141,25 +161,23 @@ export default function AddCategoryForm() {
                 <select
                   name="status"
                   value={formData.status}
-                  className=""
                   onChange={handleChange}
+                  required
                 >
-                  <option>Choose status</option>
-                  <option>Active</option>
-                  <option>Inactive</option>
+                  <option value="">Choose status</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
                 </select>
               </div>
               {errors.status && (
                 <div className="text-tiny text-danger mt-4">
-                  {" "}
-                  {errors.status[0]}{" "}
+                  {errors.status[0]}
                 </div>
               )}
             </fieldset>
-            <fieldset className="male">
-              <div className="body-title mb-10">
-                Parent Category <span className="tf-color-1"></span>
-              </div>
+
+            <fieldset className="parent">
+              <div className="body-title mb-10">Parent Category</div>
               <div className="select">
                 <select
                   name="parent_id"
@@ -167,19 +185,19 @@ export default function AddCategoryForm() {
                   onChange={handleChange}
                 >
                   <option value="">None (Top-level)</option>
-                  {parentCategories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
+                  {parentCategories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
                     </option>
                   ))}
                 </select>
               </div>
             </fieldset>
           </div>
+
+          {/* Featured */}
           <fieldset className="brand">
-            <legend className="body-title mb-2">
-              Featured <span className="tf-color-1"></span>
-            </legend>
+            <legend className="body-title mb-2">Featured</legend>
             <div className="select flex-grow">
               <label className="flex items-center gap-2">
                 <input
@@ -187,44 +205,49 @@ export default function AddCategoryForm() {
                   name="is_featured"
                   checked={formData.is_featured}
                   onChange={handleChange}
-                  className="total-checkbox"
                 />
                 <p className="text">Mark as featured</p>
               </label>
             </div>
+            {errors.is_featured && (
+              <div className="text-tiny text-danger mt-5">
+                {errors.is_featured[0]}
+              </div>
+            )}
           </fieldset>
 
+          {/* Description */}
           <fieldset className="description">
             <div className="body-title mb-10">
               Description <span className="tf-color-1">*</span>
             </div>
             <textarea
               className="flex-grow"
-              type="text"
-              placeholder="Category description"
               name="description"
-              tabIndex={0}
+              placeholder="Category description"
               value={formData.description}
               onChange={handleChange}
-              aria-required="true"
-            ></textarea>
+              required
+            />
             {errors.description && (
               <div className="text-tiny text-danger mt-5">
                 {errors.description[0]}
               </div>
             )}
           </fieldset>
+
           <div className="cols gap10">
             <button
               className="tf-button w-full"
               type="submit"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save"}
+              {loading ? "Updating Category..." : "Update Category"}
             </button>
           </div>
         </div>
 
+        {/* Image Upload */}
         <div className="wg-box">
           <fieldset>
             <div className="body-title mb-10">Upload image</div>
@@ -246,11 +269,12 @@ export default function AddCategoryForm() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                cursor: "pointer",
               }}
             >
-              <label className="uploadfile">
-                <span class="icon">
-                  <i class="icon-upload-cloud"></i>
+              <label className="uploadfile text-center">
+                <span className="icon">
+                  <i className="icon-upload-cloud"></i>
                 </span>
                 <span className="text-tiny">
                   Drag & drop an image here or{" "}
