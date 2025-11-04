@@ -3,6 +3,9 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { useEffect, useState } from "react";
 import Cookie from "js-cookie";
+import { PATHS } from "../router";
+import { Link } from "react-router-dom";
+import Spinner from "../components/Spinner";
 
 export default function Discount() {
   const [discounts, setDiscounts] = useState([]);
@@ -11,20 +14,17 @@ export default function Discount() {
   const [meta, setMeta] = useState({});
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-
-  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const apiBase = import.meta.env.VITE_API_URL;
 
   const fetchDiscounts = async (page = 1, perPage = 10, search = "") => {
     setLoading(true);
     try {
-      const csrfToken = Cookie.get("XSRF-TOKEN");
-
       const response = await fetch(
         `${apiBase}/api/get-discount?page=${page}&perPage=${perPage}&search=${search}`,
         {
           headers: {
             Accept: "application/json",
-            "X-XSRF-TOKEN": decodeURIComponent(csrfToken || ""),
+            "X-XSRF-TOKEN": decodeURIComponent(Cookie.get("XSRF-TOKEN")),
           },
           credentials: "include",
         }
@@ -63,26 +63,6 @@ export default function Discount() {
     <>
       <meta charSet="utf-8" />
       <title>Discount - Sika's Clothing</title>
-      <meta name="author" content="themesflat.com" />
-
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1"
-      />
-
-      <link rel="stylesheet" type="text/css" href="css/animate.min.css" />
-      <link rel="stylesheet" type="text/css" href="css/animation.css" />
-      <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="css/bootstrap-select.min.css"
-      />
-      <link rel="stylesheet" type="text/css" href="css/style.css" />
-      <link rel="stylesheet" href="font/fonts.css" />
-      <link rel="stylesheet" href="icon/style.css" />
-      <link rel="shortcut icon" href="images/favicon.png" />
-      <link rel="apple-touch-icon-precomposed" href="images/favicon.png" />
 
       <div id="wrapper">
         <div id="page" className="">
@@ -156,13 +136,12 @@ export default function Discount() {
                           </form>
                         </div>
 
-                        <a
+                        <Link to={PATHS.ADDDISCOUNT}
                           className="tf-button style-1 w208"
-                          href="/sc-dashboard/product/add-discount"
                         >
                           <i className="icon-plus" />
                           Add new
-                        </a>
+                        </Link>
                       </div>
                       <div className="wg-table table-all-attribute">
                         <ul className="table-title flex gap20 mb-14">
@@ -210,7 +189,7 @@ export default function Discount() {
                         </ul>
                         <ul className="flex flex-column">
                           {loading ? (
-                            <li className="text-center py-3">Loading...</li>
+                            <Spinner/>
                           ) : discounts.length === 0 ? (
                             <li className="text-center py-3">
                               No discounts found.
@@ -233,26 +212,40 @@ export default function Discount() {
                                     ? `${item.amount}%`
                                     : `$${item.amount}`}
                                 </div>
-                                <div className="body-text">{item.percentage}</div>
-                               <div className="body-text">
+                                <div className="body-text">
+                                  {item.percentage}
+                                </div>
+                                <div className="body-text">
                                   {`$${item.minimum_order_value}`}
                                 </div>
                                 <div className="body-text">
                                   {`$${item.maximum_discount}`}
                                 </div>
-                                <div className="body-text">{item.discount_code}</div>
-                                <div className="body-text">{item.starts_at}</div>
+                                <div className="body-text">
+                                  {item.discount_code}
+                                </div>
+                                <div className="body-text">
+                                  {item.starts_at}
+                                </div>
                                 <div className="body-text">{item.ends_at}</div>
                                 <div className="body-text">{item.status}</div>
-                                <div className="body-text">{item.usage_limit}</div>
-                                <div className="body-text">{item.used_count}</div>
+                                <div className="body-text">
+                                  {item.usage_limit}
+                                </div>
+                                <div className="body-text">
+                                  {item.used_count}
+                                </div>
                                 <div className="list-icon-function">
                                   <div className="item eye">
                                     <i className="icon-eye" />
                                   </div>
-                                  <div className="item edit">
-                                    <i className="icon-edit-3" />
-                                  </div>
+                                  <Link
+                                    to={`/sc-dashboard/product/edit-discount/${item.id}`}
+                                  >
+                                    <div className="item edit">
+                                      <i className="icon-edit-3" />
+                                    </div>
+                                  </Link>
                                   <div className="item trash">
                                     <i className="icon-trash-2" />
                                   </div>

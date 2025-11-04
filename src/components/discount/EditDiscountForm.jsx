@@ -1,7 +1,16 @@
-import { useState } from "react";
-import Cookie from "js-cookie";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import getSingleDiscount from "../../controllers/GetSingleDiscount";
+import { useParams } from "react-router-dom";
 
-export default function AddDiscountForm() {
+export default function EditDiscountForm() {
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const apiBase = import.meta.env.VITE_API_URL;
+  const { id } = useParams();
+  const [discount, setDiscounts] = useState([]);
+
   const [formData, setFormData] = useState({
     title: "",
     type: "",
@@ -15,11 +24,6 @@ export default function AddDiscountForm() {
     usage_limit: "",
     used_count: "",
   });
-
-  const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const apiBase = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -38,14 +42,14 @@ export default function AddDiscountForm() {
         credentials: "include",
       });
 
-      const response = await fetch(`${apiBase}/api/add-discount`, {
+      const response = await fetch(`${apiBase}/api/update-discount/${id}`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(formData),
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          "X-XSRF-TOKEN": decodeURIComponent(Cookie.get("XSRF-TOKEN")),
+          "X-XSRF-TOKEN": decodeURIComponent(Cookies.get("XSRF-TOKEN")),
         },
       });
 
@@ -55,20 +59,6 @@ export default function AddDiscountForm() {
         setErrors(data.errors || { general: data.message });
         return;
       }
-
-      setFormData({
-        title: "",
-        type: "",
-        amount: "",
-        minimum_order_value: "",
-        maximum_discount: "",
-        discount_code: "",
-        starts_at: "",
-        ends_at: "",
-        status: "",
-        usage_limit: "",
-        used_count: "",
-      });
 
       setSuccessMessage(data.message);
 
@@ -84,6 +74,31 @@ export default function AddDiscountForm() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    getSingleDiscount(setLoading, setErrors, setDiscounts, apiBase, id);
+  }, [id]);
+
+  useEffect(() => {
+    if (discount && Object.keys(discount).length > 0) {
+      setFormData({
+        title: discount.title || "",
+        type: discount.type
+          ? discount.type.charAt(0).toUpperCase() + discount.type.slice(1)
+          : "",
+        amount: discount.amount || "",
+        percentage: discount.percentage || "",
+        minimum_order_value: discount.minimum_order_value || "",
+        maximum_discount: discount.maximum_discount || "",
+        discount_code: discount.discount_code || "",
+        starts_at: discount.starts_at ? discount.starts_at.split(" ")[0] : "",
+        ends_at: discount.ends_at ? discount.ends_at.split(" ")[0] : "",
+        status: discount.status || "",
+        usage_limit: discount.usage_limit || "",
+        used_count: discount.used_count || "",
+      });
+    }
+  }, [discount]);
 
   return (
     <>
@@ -367,7 +382,7 @@ export default function AddDiscountForm() {
               type="submit"
               disabled={loading}
             >
-              {loading ? "Saving Discount..." : "Add Discount"}
+              {loading ? "Updating Discount..." : "Update Discount"}
             </button>
           </div>
         </div>

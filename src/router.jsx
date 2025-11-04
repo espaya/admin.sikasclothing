@@ -115,6 +115,13 @@ export const ROUTE_CONFIG = {
     isProtected: true,
     roles: ["ADMIN"],
   },
+  EDITDISCOUNT: {
+    path: "/sc-dashboard/product/edit-discount/:id",
+    element: <AddDiscount />,
+    name: "Edit Discount",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
   BRANDS: {
     path: "/sc-dashboard/product/brands",
     element: <Brand />,

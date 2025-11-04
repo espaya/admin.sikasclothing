@@ -1,32 +1,17 @@
+import { useParams } from "react-router-dom";
 import AddDiscountForm from "../components/AddDiscountForm";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import EditDiscountForm from "../components/discount/EditDiscountForm";
 
 export default function AddDiscount() {
+  const { id } = useParams();
   return (
     <>
       <meta charSet="utf-8" />
 
       <title>Add Discount - Sika's Clothing</title>
-      <meta name="author" content="themesflat.com" />
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1"
-      />
-      <link rel="stylesheet" type="text/css" href="css/animate.min.css" />
-      <link rel="stylesheet" type="text/css" href="css/animation.css" />
-      <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="css/bootstrap-select.min.css"
-      />
-      <link rel="stylesheet" type="text/css" href="css/style.css" />
-      <link rel="stylesheet" href="font/fonts.css" />
-      <link rel="stylesheet" href="icon/style.css" />
-      <link rel="shortcut icon" href="images/favicon.png" />
-      <link rel="apple-touch-icon-precomposed" href="images/favicon.png" />
       <div id="wrapper">
         <div id="page" className="">
           <div className="layout-wrap">
@@ -37,7 +22,7 @@ export default function AddDiscount() {
                 <div className="main-content-inner">
                   <div className="main-content-wrap">
                     <div className="flex items-center flex-wrap justify-between gap20 mb-27">
-                      <h3>Add Discount</h3>
+                      <h3>{id ? "Edit Discount" : "Add Discount"}</h3>
                       <ul className="breadcrumbs flex items-center flex-wrap justify-start gap10">
                         <li>
                           <a href="index.html">
@@ -56,12 +41,14 @@ export default function AddDiscount() {
                           <i className="icon-chevron-right" />
                         </li>
                         <li>
-                          <div className="text-tiny">Add discount</div>
+                          <div className="text-tiny">
+                            {id ? "Edit Discount" : "Add Discount"}
+                          </div>
                         </li>
                       </ul>
                     </div>
                     {/* form-add-product */}
-                    <AddDiscountForm></AddDiscountForm>
+                    {id ? <EditDiscountForm /> : <AddDiscountForm />}
                   </div>
                 </div>
                 <Footer></Footer>
