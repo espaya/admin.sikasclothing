@@ -14,6 +14,7 @@ export default function AddBrandForm() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
+  const apiBase = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -46,13 +47,9 @@ export default function AddBrandForm() {
     setSuccessMessage("");
 
     try {
-      const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
       await fetch(`${apiBase}/sanctum/csrf-cookie`, {
         credentials: "include",
       });
-
-      const csrfToken = Cookies.get("XSRF-TOKEN");
 
       const form = new FormData();
       form.append("name", formData.name);
@@ -64,39 +61,36 @@ export default function AddBrandForm() {
         form.append("logo", formData.logo);
       }
 
-      console.log(form);
-
       const response = await fetch(`${apiBase}/api/add-brand`, {
         method: "POST",
         credentials: "include",
         body: form,
         headers: {
           Accept: "application/json",
-          "X-XSRF-TOKEN": decodeURIComponent(csrfToken),
+          "X-XSRF-TOKEN": decodeURIComponent(Cookies.get("XSRF-TOKEN")),
         },
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        if (data.errors) {
-          setErrors(data.errors);
-        }
-      } else {
-        setSuccessMessage(data.message);
-        setFormData({
-          name: "",
-          logo: null,
-          description: "",
-          status: "",
-          is_featured: "",
-          website: "",
-        });
-
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 3500);
+        setErrors(data.errors);
+        return;
       }
+
+      setSuccessMessage(data.message);
+      setFormData({
+        name: "",
+        logo: null,
+        description: "",
+        status: "",
+        is_featured: "",
+        website: "",
+      });
+
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3500);
     } catch (err) {
       setErrors({ general: err.message });
       setTimeout(() => {

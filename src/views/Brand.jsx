@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import { Link } from "react-router-dom";
+import { PATHS } from "../router";
 
 export default function Brand() {
   const [brandOptions, setBrandOptions] = useState([]);
@@ -11,7 +13,7 @@ export default function Brand() {
   });
 
   const [loading, setLoading] = useState(false);
-  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const apiBase = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchBrands = async (page = 1) => {
@@ -48,9 +50,9 @@ export default function Brand() {
       <div id="wrapper">
         <div id="page" className="">
           <div className="layout-wrap">
-            <Sidebar></Sidebar>
+            <Sidebar/>
             <div className="section-content-right">
-              <Header></Header>
+              <Header/>
               <div className="main-content">
                 <div className="main-content-inner">
                   <div className="main-content-wrap">
@@ -170,9 +172,13 @@ export default function Brand() {
                                     <div className="item eye">
                                       <i className="icon-eye" />
                                     </div>
-                                    <div className="item edit">
-                                      <i className="icon-edit-3" />
-                                    </div>
+                                    <Link
+                                      to={`/sc-dashboard/product/edit-brand/${brand.slug}`}
+                                    >
+                                      <div className="item edit">
+                                        <i className="icon-edit-3" />
+                                      </div>
+                                    </Link>
                                     <div className="item trash">
                                       <i className="icon-trash-2" />
                                     </div>
