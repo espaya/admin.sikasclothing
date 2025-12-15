@@ -4,6 +4,8 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import Spinner from "../components/Spinner";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
+import { PATHS } from "../router";
 
 export default function Menu() {
   const [menus, setMenus] = useState([]);
@@ -135,9 +137,12 @@ export default function Menu() {
                               </div>
                             </form>
                           </div>
-                          <a className="tf-button style-1 w208" href="#">
+                          <Link
+                            to={PATHS.ADDMENU}
+                            className="tf-button style-1 w208"
+                          >
                             <i className="icon-plus"></i>New
-                          </a>
+                          </Link>
                         </div>
                         <div className="wg-table table-countries wrap-checkbox">
                           <ul className="table-title flex gap20 mb-14">
@@ -176,7 +181,7 @@ export default function Menu() {
                             </li>
                           </ul>
                           {loading ? (
-                            <p className="text-info">Loading</p>
+                            <Spinner />
                           ) : (
                             <ul className="flex flex-column">
                               {menus.length > 0 ? (

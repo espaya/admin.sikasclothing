@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import getOrders from "../controllers/GetOrders";
+import Spinner from "../components/Spinner";
 
 export default function OrderList() {
   const [loading, setLoading] = useState(false);
@@ -11,34 +12,8 @@ export default function OrderList() {
   const [pagination, setPagination] = useState({});
   const apiBase = import.meta.env.VITE_API_URL;
 
-  // Fetch Orders Function
-  const fetchOrders = async (url = `${apiBase}/admin/all-orders?page=1`) => {
-    setLoading(true);
-    try {
-      const response = await getOrders(setLoading, url, setErrors, setOrders);
-
-      // If getOrders returns data directly, you can modify this part accordingly
-      if (response && response.data) {
-        setOrders(response.data.data);
-        setPagination({
-          current_page: response.data.current_page,
-          last_page: response.data.last_page,
-          links: response.data.links,
-          total: response.data.total,
-          from: response.data.from,
-          to: response.data.to,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      setErrors({ fetch: "Failed to load orders" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchOrders();
+    getOrders(setLoading, apiBase, setErrors, setOrders, setPagination);
   }, []);
 
   return (
@@ -119,11 +94,9 @@ export default function OrderList() {
                           </ul>
 
                           {loading ? (
-                            <p className="text-center py-4">
-                              Loading orders...
-                            </p>
+                            <Spinner />
                           ) : orders.length > 0 ? (
-                            <ul className="flex flex-col">
+                            <ul className="flex flex-column">
                               {orders.map((order) => (
                                 <li
                                   key={order.id}
@@ -131,7 +104,11 @@ export default function OrderList() {
                                 >
                                   <div className="flex items-center justify-between gap20 flex-grow">
                                     <div className="body-text">
-                                      {order.order_number}
+                                      <a
+                                        href={`/sc-dashboard/order-detail/${order.order_number}`}
+                                      >
+                                        {order.order_number}
+                                      </a>
                                     </div>
                                     <div className="body-text">
                                       {order.user_id}
@@ -139,18 +116,26 @@ export default function OrderList() {
                                     <div className="body-text">
                                       ${order.total_amount}
                                     </div>
-                                    <div className="body-text">
-                                      {order.payment_status}
+                                    <div>
+                                      <div
+                                        className={`${
+                                          order.payment_status === "unpaid"
+                                            ? "block-not-available"
+                                            : "block-available"
+                                        }`}
+                                      >
+                                        {order.payment_status.toUpperCase()}
+                                      </div>
                                     </div>
                                     <div>
                                       <div
-                                        className={`block-available ${
+                                        className={`${
                                           order.status === "pending"
-                                            ? "text-yellow-500"
-                                            : "text-green-600"
+                                            ? "block-not-available"
+                                            : "block-available"
                                         }`}
                                       >
-                                        {order.status}
+                                        {order.status.toUpperCase()}
                                       </div>
                                     </div>
                                     <div>
@@ -188,26 +173,32 @@ export default function OrderList() {
                               {pagination.total} entries
                             </div>
                             <ul className="wg-pagination flex items-center gap2">
-                              {pagination.links.map((link, index) => (
-                                <li
-                                  key={index}
-                                  className={link.active ? "active" : ""}
-                                  style={{
-                                    cursor: link.url
-                                      ? "pointer"
-                                      : "not-allowed",
-                                  }}
-                                  onClick={() =>
-                                    link.url && fetchOrders(link.url)
-                                  }
-                                >
-                                  <a
-                                    dangerouslySetInnerHTML={{
-                                      __html: link.label,
+                              {pagination.links
+                                .filter(
+                                  (link) =>
+                                    link.label !== "&laquo; Previous" &&
+                                    link.label !== "Next &raquo;"
+                                )
+                                .map((link, index) => (
+                                  <li
+                                    key={index}
+                                    className={link.active ? "active" : ""}
+                                    style={{
+                                      cursor: link.url
+                                        ? "pointer"
+                                        : "not-allowed",
                                     }}
-                                  ></a>
-                                </li>
-                              ))}
+                                    onClick={() =>
+                                      link.url && fetchOrders(link.url)
+                                    }
+                                  >
+                                    <a
+                                      dangerouslySetInnerHTML={{
+                                        __html: link.label,
+                                      }}
+                                    ></a>
+                                  </li>
+                                ))}
                             </ul>
                           </div>
                         )}

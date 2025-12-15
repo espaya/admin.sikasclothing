@@ -35,6 +35,7 @@ import Comments from "./views/Comments.jsx";
 import Contacts from "./views/Contacts.jsx";
 import EditProduct from "./views/Editproduct.jsx";
 import AddCategoryForm from "./components/AddCategoryForm.jsx";
+import SingleCustomer from "./views/SingleCustomer.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
@@ -151,12 +152,13 @@ export const ROUTE_CONFIG = {
     roles: ["ADMIN"],
   },
   ORDERDETAIL: {
-    path: "/sc-dashboard/order-detail",
+    path: "/sc-dashboard/order-detail/:order_number",
     element: <OrderDetail />,
     name: "Order Detail",
     isProtected: true,
     roles: ["ADMIN"],
   },
+
   CUSTOMERS: {
     path: "/sc-dashboard/customers",
     element: <Customers />,
@@ -164,6 +166,15 @@ export const ROUTE_CONFIG = {
     isProtected: true,
     roles: ["ADMIN"],
   },
+
+  SINGLE_CUSTOMERS: {
+    path: "/sc-dashboard/customers/:username",
+    element: <SingleCustomer />,
+    name: "Customers",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
   BANNEDCUSTOMERS: {
     path: "/sc-dashboard/customers/banned",
     element: <BannedCustomers />,

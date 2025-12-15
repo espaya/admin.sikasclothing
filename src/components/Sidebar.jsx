@@ -286,7 +286,7 @@ export default function Sidebar() {
                   <div className="icon">
                     <i className="icon-file-plus"></i>
                   </div>
-                  <div className="text">Order</div>
+                  <div className="text">Orders</div>
                 </a>
                 <ul
                   className="sub-menu"
@@ -304,17 +304,8 @@ export default function Sidebar() {
                     </Link>
                   </li>
                   <li className="sub-menu-item">
-                    <Link href="" className="">
+                    <Link href="#" className="">
                       <div className="text">Order Tracking</div>
-                    </Link>
-                  </li>
-                  <li
-                    className={`sub-menu-item ${
-                      isActive(PATHS.ORDERDETAIL) ? "active" : ""
-                    }`}
-                  >
-                    <Link to={{ pathname: PATHS.ORDERDETAIL }} className="">
-                      <div className="text">Details</div>
                     </Link>
                   </li>
                 </ul>

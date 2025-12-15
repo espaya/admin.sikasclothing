@@ -3,6 +3,8 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import Cookies from "js-cookie";
+import Spinner from "../components/Spinner";
+import { Link } from "react-router-dom";
 
 export default function Customers() {
   const [customers, setCustomers] = useState([]);
@@ -11,7 +13,7 @@ export default function Customers() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [pagination, setPagination] = useState({});
-  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const apiBase = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const getCustomers = async () => {
@@ -21,8 +23,6 @@ export default function Customers() {
           credentials: "include",
         });
 
-        const csrfToken = Cookies.get("XSRF-TOKEN");
-
         const response = await fetch(
           `${apiBase}/api/customers?limit=${limit}&page=${page}`,
           {
@@ -30,7 +30,7 @@ export default function Customers() {
             credentials: "include",
             headers: {
               "Content-Type": "application/json",
-              "X-XSRF-TOKEN": decodeURIComponent(csrfToken),
+              "X-XSRF-TOKEN": decodeURIComponent(Cookies.get("XSRF-TOKEN")),
             },
           }
         );
@@ -40,9 +40,8 @@ export default function Customers() {
         if (!response.ok) {
           setErrors({ general: data.message });
           setTimeout(() => setErrors({ general: "" }), 5000);
+          return;
         }
-
-        console.log(data.data);
 
         setCustomers(data.data);
         setPagination({
@@ -142,6 +141,7 @@ export default function Customers() {
                             <div className="body-title">Action</div>
                           </li>
                         </ul>
+                        {loading && <Spinner />}
                         <ul className="flex flex-column">
                           {customers.map((user, index) => (
                             <li key={index} className="user-item gap14">
@@ -160,9 +160,7 @@ export default function Customers() {
                                     {user.email}
                                   </div>
                                 </div>
-                                <div className="body-text">
-                                  {user.email}
-                                </div>
+                                <div className="body-text">{user.email}</div>
                                 <div className="body-text">
                                   {user.email_verified_at || "Unverified"}
                                 </div>
@@ -179,9 +177,13 @@ export default function Customers() {
                                 </div>
 
                                 <div className="list-icon-function">
-                                  <div className="item eye">
-                                    <i className="icon-eye"></i>
-                                  </div>
+                                  <Link
+                                    to={`/sc-dashboard/customers/${user.name}`}
+                                  >
+                                    <div className="item eye">
+                                      <i className="icon-eye"></i>
+                                    </div>
+                                  </Link>
                                   <div className="item edit">
                                     <i className="icon-edit-3"></i>
                                   </div>

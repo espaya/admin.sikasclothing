@@ -1,26 +1,40 @@
+import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import SingleOrderAllItems from "../components/order_details/SingleOrderAllItems";
+import SingleOrderCartDetails from "../components/order_details/SingleOrderCartDetails";
+import SingleOrderSummary from "../components/order_details/SingleOrderSummary";
+import { useEffect, useState } from "react";
+import getSingleOrder from "../controllers/GetSingleOrder";
 
 export default function OrderDetail() {
+  const { order_number } = useParams();
+  const [loading, setLoading] = useState(false);
+  const apiBase = import.meta.env.VITE_API_URL;
+  const [orders, setOrders] = useState([]);
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    getSingleOrder(apiBase, setLoading, setErrors, setOrders, order_number);
+  }, []);
+
   return (
     <>
-      <meta charset="utf-8" />
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-      <title>Order #123783 - Sika's Clothing</title>
+      <title>Order Details - Sika's Clothing</title>
       <meta name="author" content="themesflat.com" />
-      <body class="body">
+      <div class="body">
         <div id="wrapper">
           <div id="page" class="">
             <div class="layout-wrap">
-              <Sidebar></Sidebar>
+              <Sidebar />
               <div class="section-content-right">
-                <Header></Header>
+                <Header />
                 <div class="main-content">
                   <div class="main-content-inner">
                     <div class="main-content-wrap">
                       <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                        <h3>Order #123783</h3>
+                        <h3>Order #{order_number}</h3>
                         <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                           <li>
                             <a href="index.html">
@@ -47,220 +61,30 @@ export default function OrderDetail() {
                             <i class="icon-chevron-right"></i>
                           </li>
                           <li>
-                            <div class="text-tiny">Order #123783</div>
+                            <div class="text-tiny">Order #{order_number}</div>
                           </li>
                         </ul>
                       </div>
                       <div class="wg-order-detail">
                         <div class="left flex-grow">
                           <div class="wg-box mb-20">
-                            <div class="wg-table table-order-detail">
-                              <ul class="table-title flex items-center justify-between gap20 mb-24">
-                                <li>
-                                  <div class="body-title">All item</div>
-                                </li>
-                                <li>
-                                  <div class="dropdown default">
-                                    <button
-                                      class="btn btn-secondary dropdown-toggle"
-                                      type="button"
-                                      data-bs-toggle="dropdown"
-                                      aria-haspopup="true"
-                                      aria-expanded="false"
-                                    >
-                                      <span class="body-title-2 flex items-center gap8">
-                                        Sort<i class="h6 icon-chevron-down"></i>
-                                      </span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                      <li>
-                                        <a href="javascript:void(0);">Name</a>
-                                      </li>
-                                      <li>
-                                        <a href="javascript:void(0);">
-                                          Quantity
-                                        </a>
-                                      </li>
-                                      <li>
-                                        <a href="javascript:void(0);">Price</a>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </li>
-                              </ul>
-                              <ul class="flex flex-column">
-                                <li class="product-item gap14">
-                                  <div class="image no-bg">
-                                    <img src="/assets/images/products/41.png" alt="" />
-                                  </div>
-                                  <div class="flex items-center justify-between gap40 flex-grow">
-                                    <div class="name">
-                                      <div class="text-tiny mb-1">
-                                        Product name
-                                      </div>
-                                      <a
-                                        href="product-list.html"
-                                        class="body-title-2"
-                                      >
-                                        Kristin Watson
-                                      </a>
-                                    </div>
-                                    <div class="name">
-                                      <div class="text-tiny mb-1">Quantity</div>
-                                      <div class="body-title-2">1</div>
-                                    </div>
-                                    <div class="name">
-                                      <div class="text-tiny mb-1">Price</div>
-                                      <div class="body-title-2">$50.47</div>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="product-item gap14">
-                                  <div class="image no-bg">
-                                    <img src="/assets/images/products/44.png" alt="" />
-                                  </div>
-                                  <div class="flex items-center justify-between gap40 flex-grow">
-                                    <div class="name">
-                                      <div class="text-tiny mb-1">
-                                        Product name
-                                      </div>
-                                      <a
-                                        href="product-list.html"
-                                        class="body-title-2"
-                                      >
-                                        Kristin Watson
-                                      </a>
-                                    </div>
-                                    <div class="name">
-                                      <div class="text-tiny mb-1">Quantity</div>
-                                      <div class="body-title-2">1</div>
-                                    </div>
-                                    <div class="name">
-                                      <div class="text-tiny mb-1">Price</div>
-                                      <div class="body-title-2">$50.47</div>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li class="product-item gap14">
-                                  <div class="image no-bg">
-                                    <img src="/assets/images/products/43.png" alt="" />
-                                  </div>
-                                  <div class="flex items-center justify-between gap40 flex-grow">
-                                    <div class="name">
-                                      <div class="text-tiny mb-1">
-                                        Product name
-                                      </div>
-                                      <a
-                                        href="product-list.html"
-                                        class="body-title-2"
-                                      >
-                                        Kristin Watson
-                                      </a>
-                                    </div>
-                                    <div class="name">
-                                      <div class="text-tiny mb-1">Quantity</div>
-                                      <div class="body-title-2">1</div>
-                                    </div>
-                                    <div class="name">
-                                      <div class="text-tiny mb-1">Price</div>
-                                      <div class="body-title-2">$50.47</div>
-                                    </div>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
+                            <SingleOrderAllItems items={orders.items} />
                           </div>
                           <div class="wg-box">
-                            <div class="wg-table table-cart-totals">
-                              <ul class="table-title flex mb-24">
-                                <li>
-                                  <div class="body-title">Cart Totals</div>
-                                </li>
-                                <li>
-                                  <div class="body-title">Price</div>
-                                </li>
-                              </ul>
-                              <ul class="flex flex-column gap14">
-                                <li class="cart-totals-item">
-                                  <span class="body-text">Subtotal:</span>
-                                  <span class="body-title-2">$70.13</span>
-                                </li>
-                                <li class="divider"></li>
-                                <li class="cart-totals-item">
-                                  <span class="body-text">Shipping:</span>
-                                  <span class="body-title-2">$10.00</span>
-                                </li>
-                                <li class="divider"></li>
-                                <li class="cart-totals-item">
-                                  <span class="body-text">Tax (GST):</span>
-                                  <span class="body-title-2">$5.00</span>
-                                </li>
-                                <li class="divider"></li>
-                                <li class="cart-totals-item">
-                                  <span class="body-title">Total price:</span>
-                                  <span class="body-title tf-color-1">
-                                    $90.58
-                                  </span>
-                                </li>
-                              </ul>
-                            </div>
+                            <SingleOrderCartDetails details={orders} />
                           </div>
                         </div>
-                        <div class="right">
-                          <div class="wg-box mb-20 gap10">
-                            <div class="body-title">Summary</div>
-                            <div class="summary-item">
-                              <div class="body-text">Order ID</div>
-                              <div class="body-title-2">#192847</div>
-                            </div>
-                            <div class="summary-item">
-                              <div class="body-text">Date</div>
-                              <div class="body-title-2">20 Nov 2023</div>
-                            </div>
-                            <div class="summary-item">
-                              <div class="body-text">Total</div>
-                              <div class="body-title-2 tf-color-1">$948.5</div>
-                            </div>
-                          </div>
-                          <div class="wg-box mb-20 gap10">
-                            <div class="body-title">Shipping Address</div>
-                            <div class="body-text">
-                              3517 W. Gray St. Utica, Pennsylvania 57867
-                            </div>
-                          </div>
-                          <div class="wg-box mb-20 gap10">
-                            <div class="body-title">Payment Method</div>
-                            <div class="body-text">
-                              Pay on Delivery (Cash/Card). Cash on delivery
-                              (COD) available. Card/Net banking acceptance
-                              subject to device availability.
-                            </div>
-                          </div>
-                          <div class="wg-box gap10">
-                            <div class="body-title">
-                              Expected Date Of Delivery
-                            </div>
-                            <div class="body-title-2 tf-color-2">
-                              20 Nov 2023
-                            </div>
-                            <a
-                              class="tf-button style-1 w-full"
-                              href="oder-tracking.html"
-                            >
-                              <i class="icon-truck"></i>Track order
-                            </a>
-                          </div>
-                        </div>
+                        <SingleOrderSummary summary={orders} order_number={order_number} />
                       </div>
                     </div>
                   </div>
-                  <Footer></Footer>
+                  <Footer />
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </body>
+      </div>
     </>
   );
 }
