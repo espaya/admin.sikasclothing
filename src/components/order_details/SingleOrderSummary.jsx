@@ -73,13 +73,20 @@ export default function SingleOrderSummary({ summary, order_number }) {
           Weight Limit: {summary?.shipping_method?.weight_limit ?? "N/A"}
         </div>
         <div className="body-text">
-          Estimated Delivery Time: {summary?.shipping_method?.estimated_delivery_time}
+          Estimated Delivery Time:{" "}
+          {summary?.shipping_method?.estimated_delivery_time}
         </div>
         <div className="body-text">
           Notes: {summary?.shipping_method?.notes ?? "N/A"}
         </div>
       </div>
+      <div className="wg-box mb-20 gap10">
+        <div className="body-title">Admin Notes</div>
+        <div className="body-text">{summary?.admin_notes ?? "N/A"}</div>
+      </div>
       <div className="wg-box gap10">
+        <div className="body-title">Tracking Number</div>
+        <div className="body-text">{summary?.tracking_number}</div>
         <a
           className="tf-button style-1 w-full"
           href={`/order-tracking/${summary?.tracking_number}`}

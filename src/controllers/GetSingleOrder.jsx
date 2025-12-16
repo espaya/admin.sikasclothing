@@ -25,8 +25,6 @@ const getSingleOrder = async (
 
     const data = await response.json();
 
-    console.log(data);
-
     if (!response.ok) {
       setErrors({ general: data.message });
       return;

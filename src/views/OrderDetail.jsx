@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -5,8 +6,10 @@ import Sidebar from "../components/Sidebar";
 import SingleOrderAllItems from "../components/order_details/SingleOrderAllItems";
 import SingleOrderCartDetails from "../components/order_details/SingleOrderCartDetails";
 import SingleOrderSummary from "../components/order_details/SingleOrderSummary";
-import { useEffect, useState } from "react";
 import getSingleOrder from "../controllers/GetSingleOrder";
+import SingleOrderOptions from "../components/order_details/SingleOrderOptions";
+import { Link } from "react-router-dom";
+import { PATHS } from "../router";
 
 export default function OrderDetail() {
   const { order_number } = useParams();
@@ -23,58 +26,65 @@ export default function OrderDetail() {
     <>
       <title>Order Details - Sika's Clothing</title>
       <meta name="author" content="themesflat.com" />
-      <div class="body">
+      <div className="body">
         <div id="wrapper">
-          <div id="page" class="">
-            <div class="layout-wrap">
+          <div id="page" className="">
+            <div className="layout-wrap">
               <Sidebar />
-              <div class="section-content-right">
+              <div className="section-content-right">
                 <Header />
-                <div class="main-content">
-                  <div class="main-content-inner">
-                    <div class="main-content-wrap">
-                      <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                <div className="main-content">
+                  <div className="main-content-inner">
+                    <div className="main-content-wrap">
+                      <div className="flex items-center flex-wrap justify-between gap20 mb-27">
                         <h3>Order #{order_number}</h3>
-                        <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                        <ul className="breadcrumbs flex items-center flex-wrap justify-start gap10">
                           <li>
-                            <a href="index.html">
-                              <div class="text-tiny">Dashboard</div>
-                            </a>
+                            <Link to={PATHS.ADMIN}>
+                              <div className="text-tiny">Dashboard</div>
+                            </Link>
                           </li>
                           <li>
-                            <i class="icon-chevron-right"></i>
+                            <i className="icon-chevron-right"></i>
+                          </li>
+                          <li>
+                            <Link to={PATHS.ORDERLIST}>
+                              <div className="text-tiny">Order</div>
+                            </Link>
+                          </li>
+                          <li>
+                            <i className="icon-chevron-right"></i>
                           </li>
                           <li>
                             <a href="#">
-                              <div class="text-tiny">Order</div>
+                              <div className="text-tiny">Order detail</div>
                             </a>
                           </li>
                           <li>
-                            <i class="icon-chevron-right"></i>
+                            <i className="icon-chevron-right"></i>
                           </li>
                           <li>
-                            <a href="#">
-                              <div class="text-tiny">Order detail</div>
-                            </a>
-                          </li>
-                          <li>
-                            <i class="icon-chevron-right"></i>
-                          </li>
-                          <li>
-                            <div class="text-tiny">Order #{order_number}</div>
+                            <div className="text-tiny">Order #{order_number}</div>
                           </li>
                         </ul>
                       </div>
-                      <div class="wg-order-detail">
-                        <div class="left flex-grow">
-                          <div class="wg-box mb-20">
+                      <div className="wg-order-detail">
+                        <div className="left flex-grow">
+                          <div className="wg-box mb-20">
                             <SingleOrderAllItems items={orders.items} />
                           </div>
-                          <div class="wg-box">
+                          <div className="wg-box">
                             <SingleOrderCartDetails details={orders} />
                           </div>
+                          <div className="wg-box mb-20" style={{marginTop: "20px"}}>
+                            <SingleOrderOptions order={orders} />
+                          </div>
                         </div>
-                        <SingleOrderSummary summary={orders} order_number={order_number} />
+
+                        <SingleOrderSummary
+                          summary={orders}
+                          order_number={order_number}
+                        />
                       </div>
                     </div>
                   </div>

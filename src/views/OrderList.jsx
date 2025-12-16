@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import getOrders from "../controllers/GetOrders";
 import Spinner from "../components/Spinner";
+import { Link } from "react-router-dom";
 
 export default function OrderList() {
   const [loading, setLoading] = useState(false);
@@ -104,11 +105,11 @@ export default function OrderList() {
                                 >
                                   <div className="flex items-center justify-between gap20 flex-grow">
                                     <div className="body-text">
-                                      <a
-                                        href={`/sc-dashboard/order-detail/${order.order_number}`}
+                                      <Link
+                                        to={`/sc-dashboard/order-detail/${order.order_number}`}
                                       >
                                         {order.order_number}
-                                      </a>
+                                      </Link>
                                     </div>
                                     <div className="body-text">
                                       {order.user_id}
@@ -144,12 +145,14 @@ export default function OrderList() {
                                       </div>
                                     </div>
                                     <div className="list-icon-function">
-                                      <div className="item eye">
-                                        <i className="icon-eye"></i>
-                                      </div>
-                                      <div className="item edit">
-                                        <i className="icon-edit-3"></i>
-                                      </div>
+                                      <Link
+                                        to={`/sc-dashboard/order-detail/${order.order_number}`}
+                                      >
+                                        <div title="View order" className="item eye">
+                                          <i className="icon-eye"></i>
+                                        </div>
+                                      </Link>
+
                                       <div className="item trash">
                                         <i className="icon-trash-2"></i>
                                       </div>
