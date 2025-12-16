@@ -3,7 +3,6 @@ import Cookies from "js-cookie";
 import { useCallback } from "react";
 
 export default function AddCategoryForm() {
-  
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -72,23 +71,23 @@ export default function AddCategoryForm() {
       });
 
       const data = await response.json();
-      console.log("Response:", data);
-
+      
       if (!response.ok) {
         setErrors(data.errors || { general: data.message || "Error" });
-      } else {
-        setFormData({
-          name: "",
-          description: "",
-          status: "",
-          is_featured: false,
-          image: null,
-          parent_id: "",
-        });
-        setPreview(null);
-        setSuccessMessage(data.message);
-        setTimeout(() => setSuccessMessage(""), 3500);
+        return;
       }
+
+      setFormData({
+        name: "",
+        description: "",
+        status: "",
+        is_featured: false,
+        image: null,
+        parent_id: "",
+      });
+      setPreview(null);
+      setSuccessMessage(data.message);
+      setTimeout(() => setSuccessMessage(""), 3500);
     } catch (err) {
       setErrors({ general: err.message });
       setTimeout(() => setErrors({ general: "" }), 3500);
