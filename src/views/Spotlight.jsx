@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import { Link } from "react-router-dom";
 
 export default function Spotlight() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -217,9 +218,13 @@ export default function Spotlight() {
                                     <div className="item eye">
                                       <i className="icon-eye" />
                                     </div>
-                                    <div className="item edit">
-                                      <i className="icon-edit-3" />
-                                    </div>
+                                    <Link
+                                      to={`/sc-dashboard/spotlight/edit/${spotlight.id}`}
+                                    >
+                                      <div className="item edit">
+                                        <i className="icon-edit-3" />
+                                      </div>
+                                    </Link>
                                     <div className="item trash">
                                       <i className="icon-trash-2" />
                                     </div>

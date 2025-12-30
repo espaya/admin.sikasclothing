@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 export default function CallToAction() {
   const [callToActions, setCallToAction] = useState([]);
@@ -32,9 +33,10 @@ export default function CallToAction() {
 
         if (!response.ok) {
           setErrors({ general: data.message || "Failed to load" });
-        } else {
-          setCallToAction(data);
+          return;
         }
+
+        setCallToAction(data);
       } catch (err) {
         setErrors({ general: err.message });
       } finally {
@@ -164,9 +166,11 @@ export default function CallToAction() {
                                     <div className="item eye">
                                       <i className="icon-eye" />
                                     </div>
-                                    <div className="item edit">
-                                      <i className="icon-edit-3" />
-                                    </div>
+                                    <Link to={`/sc-dashboard/call-to-action/edit/${cta.id}`}>
+                                      <div className="item edit">
+                                        <i className="icon-edit-3" />
+                                      </div>
+                                    </Link>
                                     <div className="item trash">
                                       <i className="icon-trash-2" />
                                     </div>

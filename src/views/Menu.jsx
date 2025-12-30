@@ -37,12 +37,10 @@ export default function Menu() {
         const data = await response.json();
 
         if (!response.ok) {
-          if (data.message) {
-            setErors({ general: data.message });
-          }
-        } else {
-          setMenus(data.data || []);
+          setErors({ general: data.message });
+          return;
         }
+        setMenus(data.data || []);
       } catch (err) {
         setErors({ general: err });
       } finally {
@@ -67,7 +65,7 @@ export default function Menu() {
                   <div className="main-content-inner">
                     <div className="main-content-wrap">
                       <div className="flex items-center flex-wrap justify-between gap20 mb-27">
-                        <h3>List Page</h3>
+                        <h3>List Menu</h3>
                         <ul className="breadcrumbs flex items-center flex-wrap justify-start gap10">
                           <li>
                             <a href="#">
@@ -229,9 +227,11 @@ export default function Menu() {
                                     </div>
                                     <div>
                                       <div className="list-icon-function">
-                                        <div className="item edit">
-                                          <i className="icon-edit-3"></i>
-                                        </div>
+                                        <Link to={`/sc-dashboard/menu/edit/${menu.id}`}>
+                                          <div className="item edit">
+                                            <i className="icon-edit-3"></i>
+                                          </div>
+                                        </Link>
                                         <div className="item trash">
                                           <i className="icon-trash-2"></i>
                                         </div>

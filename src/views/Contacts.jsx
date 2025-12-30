@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import fetchContactUs from "../controllers/ContactUsController";
+import Spinner from "../components/Spinner";
 
 export default function Contacts() {
   const [loading, setLoading] = useState(false);
@@ -66,6 +67,7 @@ export default function Contacts() {
                             </li>
                           </ul>
                           <ul class="flex flex-column">
+                            {loading && <Spinner />}
                             {contactUs.length === 0 ? (
                               <></>
                             ) : (

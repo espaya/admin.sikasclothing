@@ -60,13 +60,17 @@ export default function AddSpotlight() {
 
     try {
       await fetch(`${apiBase}/sanctum/csrf-cookie`, { credentials: "include" });
-      const csrfToken = Cookies.get("XSRF-TOKEN");
 
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("link_text", formData.link_text);
       formDataToSend.append("link_url", formData.link_url);
       formDataToSend.append("bg_color", formData.bg_color);
+      formDataToSend.append(
+        "add_to_megamenu",
+        formData.add_to_megamenu ? 1 : 0
+      );
+      
       if (formData.bg_image) {
         formDataToSend.append("bg_image", formData.bg_image);
       }
@@ -77,25 +81,27 @@ export default function AddSpotlight() {
         body: formDataToSend,
         headers: {
           Accept: "application/json",
-          "X-XSRF-TOKEN": decodeURIComponent(csrfToken),
+          "X-XSRF-TOKEN": decodeURIComponent(Cookies.get("XSRF-TOKEN")),
         },
       });
 
       const data = await response.json();
+
       if (!response.ok) {
         setErrors(data.errors || { general: data.message });
-      } else {
-        setFormData({
-          title: "",
-          link_text: "",
-          link_url: "",
-          bg_color: "",
-          bg_image: null,
-          add_to_megamenu: "",
-        });
-        setPreviewImage(null);
-        setSuccessMsg(data.message);
+        return;
       }
+
+      setFormData({
+        title: "",
+        link_text: "",
+        link_url: "",
+        bg_color: "",
+        bg_image: null,
+        add_to_megamenu: "",
+      });
+      setPreviewImage(null);
+      setSuccessMsg(data.message);
     } catch (err) {
       setErrors({ general: err.message });
     } finally {

@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -153,7 +154,6 @@ export default function Hero() {
                             {loading ? (
                               <div className="flex justify-center items-center py-10">
                                 <div className="loader" />
-                                
                               </div>
                             ) : (
                               heros.map((hero) => (
@@ -197,9 +197,15 @@ export default function Hero() {
                                       <div className="item eye">
                                         <i className="icon-eye" />
                                       </div>
-                                      <div className="item edit">
-                                        <i className="icon-edit-3" />
-                                      </div>
+
+                                      <Link
+                                        to={`/sc-dashboard/hero/edit-hero/${hero?.id}`}
+                                      >
+                                        <div className="item edit">
+                                          <i className="icon-edit-3" />
+                                        </div>
+                                      </Link>
+
                                       <div className="item trash">
                                         <i className="icon-trash-2" />
                                       </div>

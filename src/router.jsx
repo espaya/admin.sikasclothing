@@ -36,6 +36,9 @@ import Contacts from "./views/Contacts.jsx";
 import EditProduct from "./views/Editproduct.jsx";
 import AddCategoryForm from "./components/AddCategoryForm.jsx";
 import SingleCustomer from "./views/SingleCustomer.jsx";
+import EditHero from "./views/EditHero.jsx";
+import EditSpotlight from "./views/EditSpotlight.jsx";
+import EditCallToAction from "./views/EditCallToAction.jsx";
 
 // Centralized route configuration with metadata
 export const ROUTE_CONFIG = {
@@ -189,6 +192,7 @@ export const ROUTE_CONFIG = {
     isProtected: true,
     roles: ["ADMIN"],
   },
+
   ADDMENU: {
     path: "/sc-dashboard/menu/add",
     element: <AddMenu />,
@@ -196,6 +200,16 @@ export const ROUTE_CONFIG = {
     isProtected: true,
     roles: ["ADMIN"],
   },
+
+  EDITMENU: {
+    path: "/sc-dashboard/menu/edit/:id",
+    element: <AddMenu />,
+    name: "Edit Menu",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+
   HERO: {
     path: "/sc-dashboard/hero",
     element: <Hero />,
@@ -207,6 +221,14 @@ export const ROUTE_CONFIG = {
     path: "/sc-dashboard/hero/add",
     element: <AddHero />,
     name: "Add Hero",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+  EDIT_HERO: {
+    path: "/sc-dashboard/hero/edit-hero/:id",
+    element: <EditHero />,
+    name: "Edit Hero",
     isProtected: true,
     roles: ["ADMIN"],
   },
@@ -226,6 +248,14 @@ export const ROUTE_CONFIG = {
     roles: ["ADMIN"],
   },
 
+  EDIT_CALLTOACTION: {
+    path: "/sc-dashboard/call-to-action/edit/:id",
+    element: <EditCallToAction />,
+    name: "Edit Call to Action",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
   SPOTLIGHT: {
     path: "/sc-dashboard/spotlight",
     element: <Spotlight />,
@@ -237,6 +267,14 @@ export const ROUTE_CONFIG = {
     path: "/sc-dashboard/spotlight/add",
     element: <AddSpotlight />,
     name: "All Spotlight",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+  EDIT_SPOTLIGHT: {
+    path: "/sc-dashboard/spotlight/edit/:id",
+    element: <EditSpotlight />,
+    name: "Edit Spotlight",
     isProtected: true,
     roles: ["ADMIN"],
   },

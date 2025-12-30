@@ -60,14 +60,9 @@ export default function AddHero() {
 
     try {
       // 1. Get CSRF cookie
-      const csrfRes = await fetch(`${apiBase}/sanctum/csrf-cookie`, {
+      await fetch(`${apiBase}/sanctum/csrf-cookie`, {
         credentials: "include",
       });
-
-      if (!csrfRes.ok) throw new Error("Failed to get CSRF cookie");
-
-      const csrfToken = Cookies.get("XSRF-TOKEN");
-      if (!csrfToken) throw new Error("CSRF token not found");
 
       // 2. Build FormData
       const formDataToSend = new FormData();
@@ -77,19 +72,12 @@ export default function AddHero() {
         }
       });
 
-      // Debug
-      console.group("📦 FormData Payload");
-      for (let [key, value] of formDataToSend.entries()) {
-        console.log(`${key}:`, value);
-      }
-      console.groupEnd();
-
       // 3. Send request
       const response = await fetch(`${apiBase}/api/store-hero`, {
         method: "POST",
         credentials: "include",
         headers: {
-          "X-XSRF-TOKEN": decodeURIComponent(csrfToken),
+          "X-XSRF-TOKEN": decodeURIComponent(Cookies.get("XSRF-TOKEN")),
           Accept: "application/json",
         },
         body: formDataToSend,
@@ -98,30 +86,26 @@ export default function AddHero() {
       const data = await response.json();
 
       if (!response.ok) {
-        if (data.errors) {
-          setErrors(data.errors || { general: data.message });
-        } else {
-          setErrors({ general: data.message });
-          setTimeout(() => setErrors({}), 3500);
-        }
-      } else {
-        // Reset form
-        setFormData({
-          title: "",
-          subtitle: "",
-          text: "",
-          img: null,
-          btn_text: "",
-          btn_link: "",
-        });
-        setPreview(null);
-
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: data.message,
-        });
+        setErrors(data.errors || { general: data.message });
+        return;
       }
+
+      // Reset form
+      setFormData({
+        title: "",
+        subtitle: "",
+        text: "",
+        img: null,
+        btn_text: "",
+        btn_link: "",
+      });
+      setPreview(null);
+
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: data.message,
+      });
     } catch (err) {
       setErrors({ general: err.message });
       setTimeout(() => setErrors({}), 3500);
