@@ -303,11 +303,6 @@ export default function Sidebar() {
                       <div className="text">Order List</div>
                     </Link>
                   </li>
-                  <li className="sub-menu-item">
-                    <Link href="#" className="">
-                      <div className="text">Order Tracking</div>
-                    </Link>
-                  </li>
                 </ul>
               </li>
               <li

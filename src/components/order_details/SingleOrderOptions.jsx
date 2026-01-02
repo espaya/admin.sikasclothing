@@ -1,5 +1,8 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
+import PaymentStatusOptions from "./PaymentStatusOptions";
+import OrderStatusOptions from "./OrderStatusOptions";
+import OrderAdminNotes from "./OrderAdminNotes";
 
 export default function SingleOrderOptions({ order }) {
   const [loading, setLoading] = useState(false);
@@ -23,8 +26,6 @@ export default function SingleOrderOptions({ order }) {
     setLoading(true);
     setErrors({});
     setSuccessMsg("");
-
-    console.log(`Order ID: ${order?.id}`);
 
     try {
       await fetch(`${apiBase}/sanctum/csrf-cookie`, { credentials: "include" });
@@ -54,7 +55,7 @@ export default function SingleOrderOptions({ order }) {
 
       setTimeout(() => {
         window.location.reload();
-      }, 3500);
+      }, 2000);
     } catch (err) {
       setErrors({ general: err.message });
     } finally {
@@ -72,94 +73,28 @@ export default function SingleOrderOptions({ order }) {
         onSubmit={handleSubmit}
       >
         {/* Combined Order Status with Groups */}
-        <fieldset className="mb-20">
-          <div className="body-title mb-10">
-            Order Status <span className="tf-color-1">*</span>
-          </div>
-          <div className="select">
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full"
-            >
-              <option value="">Select Status</option>
-
-              {/* Processing */}
-              <optgroup label="Processing">
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="processing">Processing</option>
-                <option value="on_hold">On Hold</option>
-              </optgroup>
-
-              {/* Fulfillment */}
-              <optgroup label="Fulfillment">
-                <option value="packed">Packed</option>
-                <option value="shipped">Shipped</option>
-                <option value="out_for_delivery">Out for Delivery</option>
-                <option value="delivered">Delivered</option>
-              </optgroup>
-
-              {/* Completion */}
-              <optgroup label="Completion">
-                <option value="completed">Completed</option>
-              </optgroup>
-
-              {/* Issues */}
-              <optgroup label="Issues">
-                <option value="delayed">Delayed</option>
-                <option value="returned">Returned</option>
-                <option value="refunded">Refunded</option>
-                <option value="cancelled">Cancelled</option>
-                <option value="failed">Failed</option>
-              </optgroup>
-            </select>
-          </div>
-          {errors.status && <p className="text-danger"> {errors.status[0]} </p>}
-        </fieldset>
+        <OrderStatusOptions
+          formData={formData}
+          errors={errors}
+          handleChange={handleChange}
+          setErrors={setErrors}
+        />
 
         {/* Payment Status */}
-        <fieldset className="mb-20">
-          <div className="body-title mb-10">Payment Status</div>
-          <div className="select">
-            <select
-              name="payment_status"
-              value={formData.payment_status}
-              onChange={handleChange}
-              className="w-full"
-            >
-              <option value="">Select</option>
-              <option value="unpaid">Unpaid</option>
-              <option value="pending">Pending</option>
-              <option value="processing">Processing</option>
-              <option value="paid">Paid</option>
-              <option value="partially_paid">Partially Paid</option>
-              <option value="refunded">Refunded</option>
-              <option value="failed">Failed</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
-          </div>
-          {errors.payment_status && (
-            <p className="text-danger"> {errors.payment_status[0]} </p>
-          )}
-        </fieldset>
+        <PaymentStatusOptions
+          formData={formData}
+          errors={errors}
+          handleChange={handleChange}
+          setErrors={setErrors}
+        />
 
         {/* Admin Notes */}
-        <fieldset className="mb-30">
-          <div className="body-title mb-10">Admin Notes</div>
-          <textarea
-            name="admin_notes"
-            value={formData.admin_notes}
-            onChange={handleChange}
-            placeholder="Add internal notes..."
-            rows="3"
-            className="w-full"
-          />
-          {errors.admin_notes && (
-            <p className="text-danger">{errors.admin_notes[0]}</p>
-          )}
-        </fieldset>
+        <OrderAdminNotes
+          formData={formData}
+          handleChange={handleChange}
+          errors={errors}
+          setErrors={setErrors}
+        />
 
         {/* Submit Button */}
         <div className="cols gap10 mt-20">
