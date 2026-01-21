@@ -4,13 +4,17 @@ import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 import { PATHS } from "../router";
 import Swal from "sweetalert2";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import getAllPosts from "../controllers/GetAllPosts";
 
 export default function AllPosts() {
   const [errors, setErrors] = useState({});
   const apiBase = import.meta.env.VITE_API_URL;
   const [successMsg, setSuccessMsg] = useState("");
+  const [allPost, setAllPost] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const deletePost = async (postID) => {
     try {
@@ -27,7 +31,7 @@ export default function AllPosts() {
 
       if (result.isConfirmed) {
         // delete post
-        const response = await fetch(`${apiBase}/api/`, {
+        const response = await fetch(`${apiBase}/api/blog/delete/${postID}`, {
           credentials: "include",
           method: "DELETE",
           headers: {
@@ -48,12 +52,17 @@ export default function AllPosts() {
 
         setTimeout(() => {
           setSuccessMsg("");
+          window.location.reload();
         }, 3000);
       }
     } catch (err) {
       setErrors({ general: err.message });
     }
   };
+
+  useEffect(() => {
+    getAllPosts(setErrors, setAllPost, setLoading, apiBase, currentPage);
+  }, [currentPage]);
 
   return (
     <>
@@ -146,59 +155,134 @@ export default function AllPosts() {
                               <div className="body-title">Action</div>
                             </li>
                           </ul>
-                          <ul className="flex flex-column">
-                            <li className="user-item gap14">
-                              <div className="flex items-center justify-between gap20 flex-grow">
-                                <div className="name">
-                                  <a href="#" className="body-title-2">
-                                    Kristin Watson
-                                  </a>
-                                  <div className="text-tiny mt-3">
-                                    Category name
-                                  </div>
-                                </div>
-                                <div className="body-text">$1,452.500</div>
 
-                                <div className="body-text">Jan 1, 2026</div>
-                                <div className="body-text">Active</div>
-                                <div className="list-icon-function">
-                                  <div className="item eye">
-                                    <i className="icon-eye"></i>
-                                  </div>
-                                  <div className="item edit">
-                                    <i className="icon-edit-3"></i>
-                                  </div>
-                                  <div className="item trash">
-                                    <i
-                                      onClick={() => deletePost(1)}
-                                      className="icon-trash-2"
-                                    ></i>
-                                  </div>
+                          <ul className="flex flex-column">
+                            {loading && (
+                              <li className="user-item">
+                                <div className="body-text">
+                                  Loading posts...
                                 </div>
-                              </div>
-                            </li>
+                              </li>
+                            )}
+
+                            {!loading && allPost?.data?.length === 0 && (
+                              <li className="user-item">
+                                <div className="body-text">No posts found</div>
+                              </li>
+                            )}
+
+                            {!loading &&
+                              allPost?.data?.map((post) => (
+                                <li key={post.id} className="user-item gap14">
+                                  <div className="flex items-center justify-between gap20 flex-grow">
+                                    {/* Title + Category */}
+                                    <div className="name">
+                                      <Link
+                                        to={`/sc-dashboard/blog/create/${post.slug}`}
+                                        className="body-title-2"
+                                      >
+                                        {post.title}
+                                      </Link>
+                                      <div className="text-tiny mt-3">
+                                        {post?.category?.category_name}
+                                      </div>
+                                    </div>
+
+                                    {/* Excerpt */}
+                                    <div className="body-text">
+                                      {post.content.substring(0, 50)}...
+                                    </div>
+
+                                    {/* Date */}
+                                    <div className="body-text">
+                                      {new Date(post.created_at).toDateString()}
+                                    </div>
+
+                                    {/* Status */}
+                                    <div className="body-text">
+                                      {post.status === "published"
+                                        ? "Published"
+                                        : "Draft"}
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div className="list-icon-function">
+                                      {/* <Link
+                                        to={`${PATHS.VIEW_POST}/${post.slug}`}
+                                        className="item eye"
+                                      >
+                                        <i className="icon-eye"></i>
+                                      </Link> */}
+
+                                      <Link
+                                        to={`/sc-dashboard/blog/create/${post.slug}`}
+                                        className="item edit"
+                                      >
+                                        <i className="icon-edit-3"></i>
+                                      </Link>
+
+                                      <div className="item trash">
+                                        <i
+                                          onClick={() => deletePost(post.id)}
+                                          className="icon-trash-2"
+                                        ></i>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                              ))}
                           </ul>
                         </div>
                         <div className="divider"></div>
                         <div className="flex items-center justify-between flex-wrap gap10">
-                          <div className="text-tiny">Showing 10 entries</div>
+                          <div className="text-tiny">
+                            Showing {allPost.from}–{allPost.to} of{" "}
+                            {allPost.total} entries
+                          </div>
+
                           <ul className="wg-pagination">
-                            <li>
-                              <a href="#">
+                            {/* Previous */}
+                            <li
+                              className={
+                                allPost.prev_page_url ? "" : "disabled"
+                              }
+                            >
+                              <a
+                                disabled={!allPost.prev_page_url}
+                                onClick={() => setCurrentPage(currentPage - 1)}
+                              >
                                 <i className="icon-chevron-left"></i>
                               </a>
                             </li>
-                            <li>
-                              <a href="#">1</a>
-                            </li>
-                            <li className="active">
-                              <a href="#">2</a>
-                            </li>
-                            <li>
-                              <a href="#">3</a>
-                            </li>
-                            <li>
-                              <a href="#">
+
+                            {/* Page Numbers */}
+                            {allPost?.links
+                              ?.filter((link) => !isNaN(link.label))
+                              .map((link) => (
+                                <li
+                                  key={link.label}
+                                  className={link.active ? "active" : ""}
+                                >
+                                  <a
+                                    onClick={() =>
+                                      setCurrentPage(Number(link.label))
+                                    }
+                                  >
+                                    {link.label}
+                                  </a>
+                                </li>
+                              ))}
+
+                            {/* Next */}
+                            <li
+                              className={
+                                allPost.next_page_url ? "" : "disabled"
+                              }
+                            >
+                              <a
+                                disabled={!allPost.next_page_url}
+                                onClick={() => setCurrentPage(currentPage + 1)}
+                              >
                                 <i className="icon-chevron-right"></i>
                               </a>
                             </li>

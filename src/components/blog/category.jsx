@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import fetchCategory from "../../controllers/PostCategoryController";
 
-export default function Category({handleOnChange}) {
+export default function Category({handleOnChange, value}) {
   const [categories, setCategories] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,8 @@ export default function Category({handleOnChange}) {
   return (
     <>
       <div className="select">
-        <select onChange={handleOnChange} name="category">
+        <select value={value} onChange={handleOnChange} name="category">
+          
           <option>Choose category</option>
           {categories.length === 0 ? (
             <option>No category found</option>

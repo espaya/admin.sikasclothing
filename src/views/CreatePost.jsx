@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Category from "../components/blog/category";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -7,12 +7,15 @@ import Sidebar from "../components/Sidebar";
 import Tags from "../components/blog/tags";
 import BlogContent from "../components/blog/blog_content";
 import FeaturedImage from "../components/blog/featured_image";
+import getSinglePost from "../controllers/GetSinglePost";
+import { useParams } from "react-router-dom";
 
 export default function CreatePost() {
   const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const apiBase = import.meta.env.VITE_API_URL;
+  const { slug } = useParams();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -53,7 +56,13 @@ export default function CreatePost() {
           formData.tags.forEach((tag) => {
             newbody.append("tags[]", tag);
           });
-        } else {
+        } else if (
+          key === "featured_image" &&
+          formData.featured_image instanceof File
+        ) {
+          // ✅ only append if it's a File object, not a string
+          newbody.append(key, formData[key]);
+        } else if (key !== "featured_image") {
           newbody.append(key, formData[key]);
         }
       });
@@ -64,10 +73,16 @@ export default function CreatePost() {
         credentials: "include",
       });
 
-      const response = await fetch(`${apiBase}/api/blog/create`, {
+      // ✅ Determine endpoint based on slug
+      const endpoint =
+        slug && slug.length > 0
+          ? `${apiBase}/api/blog/update/${slug}`
+          : `${apiBase}/api/blog/create`;
+
+      const response = await fetch(endpoint, {
         method: "POST",
         credentials: "include",
-        body: newbody, // use FormData
+        body: newbody,
         headers: {
           Accept: "application/json",
           "X-XSRF-TOKEN": decodeURIComponent(Cookies.get("XSRF-TOKEN")),
@@ -80,24 +95,34 @@ export default function CreatePost() {
         setErrors(data.errors || { general: data.message });
         return;
       }
-      setFormData({
-        title: "",
-        category: "",
-        tags: [],
-        tagInput: "", // for the tag text input
-        content: "",
-        status: "draft", // draft, published, archived
-        featured_image: null, // <-- better to use null
-        published_at: "",
-        comments_enabled: "",
-      });
+
       setSuccessMsg(data.message);
+
+      // ✅ Reset form only for create mode
+      if (!slug || slug.length === 0) {
+        setFormData({
+          title: "",
+          category: "",
+          tags: [],
+          tagInput: "",
+          content: "",
+          status: "draft",
+          featured_image: null,
+          published_at: "",
+          comments_enabled: "",
+        });
+      }
     } catch (err) {
       setErrors({ general: err.message });
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // Fetch the existing post data using the slug
+    getSinglePost(setFormData, setErrors, setLoading, apiBase, slug);
+  }, [slug]);
 
   return (
     <div className="body">
@@ -111,7 +136,7 @@ export default function CreatePost() {
                 <div className="main-content-inner">
                   <div className="main-content-wrap">
                     <div className="flex items-center flex-wrap justify-between gap20 mb-27">
-                      <h3>Add Blog Post</h3>
+                      <h3>{slug ? "Edit Blog Post" : "Add Blog Post"}</h3>
                       <ul className="breadcrumbs flex items-center flex-wrap gap10">
                         <li>
                           <a href="/">
@@ -161,6 +186,7 @@ export default function CreatePost() {
                             name="title"
                             autoComplete="off"
                             onChange={handleOnChange}
+                            value={formData.title}
                           />
                           {errors.title && (
                             <div className="text-tiny text-danger">
@@ -175,7 +201,10 @@ export default function CreatePost() {
                             <div className="body-title mb-10">
                               Category <span className="tf-color-1">*</span>
                             </div>
-                            <Category handleOnChange={handleOnChange} />
+                            <Category
+                              handleOnChange={handleOnChange}
+                              value={formData.category}
+                            />
                             {errors.category && (
                               <div className="text-tiny text-danger">
                                 {errors.category[0]}
@@ -202,7 +231,7 @@ export default function CreatePost() {
                       <div className="wg-box">
                         {/* Featured Image */}
                         <FeaturedImage
-                          handleOnChange={handleFormSubmit}
+                          handleOnChange={handleOnChange}
                           errors={errors}
                           formData={formData}
                           setFormData={setFormData}
@@ -213,9 +242,10 @@ export default function CreatePost() {
                           <fieldset className="publish-date">
                             <div className="body-title mb-10">Publish Date</div>
                             <input
-                              onChange={handleOnChange}
                               type="date"
-                              name="published_at" // match formData
+                              name="published_at"
+                              value={formData.published_at} // <-- add this
+                              onChange={handleOnChange}
                             />
                             {errors.published_at && (
                               <div className="text-tiny text-danger">
@@ -227,7 +257,11 @@ export default function CreatePost() {
                           <fieldset className="status">
                             <div className="body-title mb-10">Status</div>
                             <div className="select">
-                              <select name="status" onChange={handleOnChange}>
+                              <select
+                                value={formData.status}
+                                name="status"
+                                onChange={handleOnChange}
+                              >
                                 <option value="">Select</option>
                                 <option value="published">Published</option>
                                 <option value="draft">Draft</option>
@@ -248,6 +282,7 @@ export default function CreatePost() {
                               <select
                                 name="comments_enabled"
                                 onChange={handleOnChange}
+                                value={formData.comments_enabled}
                               >
                                 <option value="">Select</option>
                                 <option value="1">Yes</option>

@@ -33,8 +33,6 @@ import PostCategory from "./views/PostCategory.jsx";
 import CreatePostCategory from "./views/CreatePostCategory.jsx";
 import Comments from "./views/Comments.jsx";
 import Contacts from "./views/Contacts.jsx";
-import EditProduct from "./views/Editproduct.jsx";
-import AddCategoryForm from "./components/AddCategoryForm.jsx";
 import SingleCustomer from "./views/SingleCustomer.jsx";
 import EditHero from "./views/EditHero.jsx";
 import EditSpotlight from "./views/EditSpotlight.jsx";
@@ -209,7 +207,6 @@ export const ROUTE_CONFIG = {
     roles: ["ADMIN"],
   },
 
-
   HERO: {
     path: "/sc-dashboard/hero",
     element: <Hero />,
@@ -313,9 +310,17 @@ export const ROUTE_CONFIG = {
   },
 
   CREATE_POST: {
-    path: "/sc-dashboard/blog/create",
+    path: "/sc-dashboard/blog/create/",
     element: <CreatePost />,
     name: "Create Post",
+    isProtected: true,
+    roles: ["ADMIN"],
+  },
+
+  EDIT_POST: {
+    path: "/sc-dashboard/blog/create/:slug",
+    element: <CreatePost />,
+    name: "Edit Post",
     isProtected: true,
     roles: ["ADMIN"],
   },
@@ -383,13 +388,13 @@ const router = createBrowserRouter(
       ) : (
         element
       ),
-    })
-  )
+    }),
+  ),
 );
 
 export default router;
 
 // Path constants for direct usage
 export const PATHS = Object.fromEntries(
-  Object.entries(ROUTE_CONFIG).map(([key, value]) => [key, value.path])
+  Object.entries(ROUTE_CONFIG).map(([key, value]) => [key, value.path]),
 );
